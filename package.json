@@ -9,14 +9,24 @@
     "bootstrap": "^3.3.5",
     "browser-sync": "^2.9.11",
     "browserify": "^12.0.1",
+    "chai": "^3.4.0",
     "del": "^2.0.2",
     "gulp-less": "^3.0.3",
+    "gulp-mocha": "^2.1.3",
+    "jsdom": "^7.0.2",
     "lodash": "^3.10.1",
+    "mocha": "^2.3.3",
     "path": "^0.12.7",
     "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
-    "vinyl-source-stream": "^1.1.0"
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "testdom": "^2.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^3.29.0"
   },
   "paths": {
     "bootstrap": "./node_modules/bootstrap/less",
@@ -24,7 +34,8 @@
     "js": "./src/**/*.js",
     "jsx": "./src/**/*.jsx",
     "app": "./src/app.js",
-    "html": "*.html"
+    "html": "*.html",
+    "tests": "./test/**/*.js"
   },
   "dest": {
     "style": "style.css",

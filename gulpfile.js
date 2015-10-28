@@ -1,14 +1,15 @@
-var gulp = require('gulp'),
+var argv = require('yargs').argv,
+    gulp = require('gulp'),
     del = require('del'),
     reactify = require("reactify"),
     browserify = require('browserify'),
-    less = require('gulp-less'),
-    source = require('vinyl-source-stream'),
-    path = require('path'),
-    package = require('./package.json'),
     browserSync = require('browser-sync').create(),
-    reload = browserSync.reload;
+    less = require('gulp-less'),
+    package = require('./package.json'),
+    path = require('path'),
+    source = require('vinyl-source-stream');
 
+require('./test/compiler');
 
 /**
  * Clean out dist
@@ -57,7 +58,7 @@ gulp.task('clean', function(cb) {
   gulp.watch([
     package.paths.js,
     package.paths.jsx,
-    package.paths.html,
+    package.paths.html
   ], [
     'js',
     'browser_reload'
@@ -69,3 +70,19 @@ gulp.task('clean', function(cb) {
 .task('browser_reload', function() {
   browserSync.reload()
 })
+
+.task('test', function () {
+  if (tests = (argv.tests || argv.t)) {
+    paths = tests
+    if (!paths.match(/\.js$/)) {
+      paths = paths+'/**/*-test.js'
+    }
+  } else {
+    paths = package.paths.tests;
+  }
+  return gulp.src(paths, { read: false })
+    .pipe(mocha({
+      reporter: 'nyan',
+      // require: [path.join(__dirname, 'test' , 'helper.js')]
+    }));
+});
