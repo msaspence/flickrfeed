@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     del = require('del'),
     less = require('gulp-less'),
+    path = require('path'),
     package = require('./package.json'),
     browserSync = require('browser-sync').create(),
     reload = browserSync.reload;
@@ -34,7 +35,9 @@ gulp.task('clean', function(cb) {
  */
 .task('less', function() {
   return gulp.src(package.paths.less)
-    .pipe(less())
+    .pipe(less({
+      paths: [path.join(__dirname, package.paths.bootstrap)]
+    }))
     .pipe(gulp.dest(package.dest.css))
     .pipe(browserSync.stream());
 })
