@@ -1,6 +1,9 @@
 var gulp = require('gulp'),
     del = require('del'),
+    reactify = require("reactify"),
+    browserify = require('browserify'),
     less = require('gulp-less'),
+    source = require('vinyl-source-stream'),
     path = require('path'),
     package = require('./package.json'),
     browserSync = require('browser-sync').create(),
@@ -11,7 +14,7 @@ var gulp = require('gulp'),
  * Clean out dist
  */
 gulp.task('clean', function(cb) {
-  return del([package.dest.dist], cb);
+  return del([package.dest.dist+'/**', package.dest.dist], cb);
 })
 
 /**
@@ -41,9 +44,22 @@ gulp.task('clean', function(cb) {
     .pipe(gulp.dest(package.dest.css))
     .pipe(browserSync.stream());
 })
+/**
+ * JavaScript compilation
+ */
+.task('js', function() {
+  return browserify(package.paths.app, { debug: true})
+  .transform(reactify)
+  .bundle()
+  .pipe(source(package.dest.app))
+  .pipe(gulp.dest(package.dest.dist));
+})
   gulp.watch([
-    package.paths.html
+    package.paths.js,
+    package.paths.jsx,
+    package.paths.html,
   ], [
+    'js',
     'browser_reload'
   ])
 

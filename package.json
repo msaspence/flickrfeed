@@ -8,17 +8,29 @@
   "devDependencies": {
     "bootstrap": "^3.3.5",
     "browser-sync": "^2.9.11",
+    "browserify": "^12.0.1",
     "del": "^2.0.2",
     "gulp-less": "^3.0.3",
-    "path": "^0.12.7"
+    "lodash": "^3.10.1",
+    "path": "^0.12.7",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
   },
   "paths": {
     "bootstrap": "./node_modules/bootstrap/less",
     "less": "assets/less/*.less",
+    "js": "./src/**/*.js",
+    "jsx": "./src/**/*.jsx",
+    "app": "./src/app.js",
     "html": "*.html"
   },
   "dest": {
+    "style": "style.css",
+    "app": "js/app.js",
     "dist": "dist",
+    "js": "js",
     "css": "dist/css"
   }
 }
