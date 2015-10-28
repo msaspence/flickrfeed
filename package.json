@@ -4,15 +4,18 @@
   "description": "",
   "main": "gulpfile.js",
   "author": "",
-  "license": "ISC",
+  "license": "None",
   "devDependencies": {
     "browser-sync": "^2.9.11",
-    "del": "^2.0.2"
+    "del": "^2.0.2",
+    "gulp-less": "^3.0.3",
   },
   "paths": {
+    "less": "assets/less/*.less",
     "html": "*.html"
   },
   "dest": {
-    "dist": "dist"
+    "dist": "dist",
+    "css": "dist/css"
   }
 }

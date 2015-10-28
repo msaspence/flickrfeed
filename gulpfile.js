@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     del = require('del'),
+    less = require('gulp-less'),
     package = require('./package.json'),
     browserSync = require('browser-sync').create(),
     reload = browserSync.reload;
@@ -9,7 +10,7 @@ var gulp = require('gulp'),
  * Clean out dist
  */
 gulp.task('clean', function(cb) {
-  return del(['dist/**'], cb);
+  return del([package.dest.dist], cb);
 })
 
 /**
@@ -28,11 +29,22 @@ gulp.task('clean', function(cb) {
 })
 
 .task('serve', ['clean', 'server'], function() {
+/**
+ * Less compilation
+ */
+.task('less', function() {
+  return gulp.src(package.paths.less)
+    .pipe(less())
+    .pipe(gulp.dest(package.dest.css))
+    .pipe(browserSync.stream());
+})
   gulp.watch([
     package.paths.html
   ], [
     'browser_reload'
   ])
+
+  gulp.watch([package.paths.less], ['less'])
 })
 
 .task('browser_reload', function() {
