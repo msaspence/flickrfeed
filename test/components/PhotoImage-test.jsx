@@ -1,7 +1,7 @@
 require('../helper.js')
-var Photo = require('../../src/components/Photo.jsx');
+var PhotoImage = require('../../src/components/PhotoImage.jsx');
 
-describe('Photo', function() {
+describe('PhotoImage', function() {
 
   var photo,
       photoData;
@@ -23,13 +23,13 @@ describe('Photo', function() {
   describe('#render()', function () {
 
     var render = function() {
-      photo = TestUtils.renderIntoDocument(<Photo photo={photoData} />);
+      photo = TestUtils.renderIntoDocument(<PhotoImage photo={photoData} size='m' />);
       renderedDOM = ReactDOM.findDOMNode(photo)
     }
 
     it('renders a image', function () {
       render();
-      expect(renderedDOM.querySelector("img").getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/myphotoid_flickrsecret_n.jpg');
+      expect(renderedDOM.getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/myphotoid_flickrsecret_m.jpg');
     });
 
   });

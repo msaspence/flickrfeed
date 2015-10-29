@@ -1,23 +1,21 @@
 require('../helper.js')
+var Feed = require('../../src/services/Feed.js'),
+    Photos = require('../../src/components/Photos.jsx');
 
 describe('Photos', function() {
 
-  var Photos,
-      photos,
+  var photos,
       feed,
       renderedDOM;
 
   beforeEach(function() {
-    Feed = require('../../src/services/Feed.js');
     feed = new Feed();
-    Photos = require('../../src/components/Photos.jsx');
-    photosC = <Photos feed={feed} />;
   });
 
   describe('#render()', function () {
 
     var render = function() {
-      photos = TestUtils.renderIntoDocument(photosC);
+      photos = TestUtils.renderIntoDocument(<Photos feed={feed} />);
       renderedDOM = ReactDOM.findDOMNode(photos)
     }
 

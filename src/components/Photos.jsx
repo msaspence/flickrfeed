@@ -27,7 +27,7 @@ var React = require('react'),
 
       if (this.state.photos.length > 0) {
         photos = this.state.photos.map(function (photo) {
-          return <Photo photo={photo} />;
+          return <Photo photo={photo} key={photo.id}/>;
         });
       } else {
         photos = <div className="empty"><p>There are no photos to see here!</p></div>;
