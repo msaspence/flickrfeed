@@ -1,9 +1,8 @@
-var React = require('react');
+var React = require('react'),
+    Header = require('./Header.jsx'),
+    Photos = require('./Photos.jsx');
 
 (function(React, module, undefined) {
-
-  var Header = require('./Header.jsx'),
-      Photos = require('./Photos.jsx');
 
   module.exports = React.createClass({
 
@@ -11,6 +10,7 @@ var React = require('react');
       return (
         <div className="container">
           <Header text="Flickr Photo Stream" />
+          <Photos feed={this.props.feed} />
         </div>
       );
     }

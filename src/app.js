@@ -3,10 +3,15 @@ var React    = require('react'),
     _        = require('lodash');
 
 (function(React, ReactDOM, _) {
-  var App = require('./components/App.jsx');
+  var App = require('./components/App.jsx'),
+      Feed = require('./services/Feed.js');
+
+  feed = new Feed();
+  feed.update();
 
   var render = function() {
-    ReactDOM.render(React.createElement(App), document.getElementById('app'));
+    ReactDOM.render(<App feed={feed}/>, document.getElementById('app'));
   };
   render();
+
 }(React, ReactDOM, _));

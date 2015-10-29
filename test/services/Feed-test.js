@@ -3,6 +3,7 @@ require('../helper.js')
 var Feed,
     feed,
     server;
+
 describe('Feed', function() {
 
   beforeEach(function() {

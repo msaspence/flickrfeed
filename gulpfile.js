@@ -15,6 +15,7 @@ var argv = require('yargs').argv,
     path = require('path'),
     source = require('vinyl-source-stream');
 
+require('./test/setup');
 require('./test/compiler');
 
 /**
@@ -143,8 +144,8 @@ gulp.task('clean', function(cb) {
 .task('test', function () {
   if (tests = (argv.tests || argv.t)) {
     paths = tests
-    if (!paths.match(/\.js$/)) {
-      paths = paths+'/**/*-test.js'
+    if (!paths.match(/\.jsx?$/)) {
+      paths = [paths+'/**/*-test.js', paths+'/**/*-test.jsx']
     }
   } else {
     paths = package.paths.tests;
