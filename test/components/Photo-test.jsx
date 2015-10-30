@@ -15,7 +15,9 @@ describe('Photo', function() {
       isfamily: 0,
       isfriend: 0,
       ispublic: 1,
-      owner: "12345678@N08",
+      description: "My photo's description",
+      owner: "owner_id",
+      owner_display: "Owner String",
       secret: "flickrsecret",
       server: "server1"
     });
@@ -37,7 +39,22 @@ describe('Photo', function() {
       render();
       titleLink = renderedDOM.querySelector(".title a")
       expect(titleLink.textContent).to.equal('My Photo');
-      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/12345678@N08/my_photo_id');
+      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/owner_id/my_photo_id');
+    });
+
+    it('renders the author', function () {
+      render();
+      photoModel.trigger();
+      authorLink = renderedDOM.querySelector(".author a")
+      expect(authorLink.textContent).to.equal('Owner String');
+      expect(authorLink.getAttribute('href')).to.equal('https://www.flickr.com/people/owner_id');
+    });
+
+    it('renders the description', function () {
+      render();
+      photoModel.trigger();
+      description = renderedDOM.querySelector(".description")
+      expect(description.textContent).to.equal('My photo\'s description');
     });
 
   });

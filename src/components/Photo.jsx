@@ -1,6 +1,7 @@
 var React      = require('react'),
-    _          = require('lodash')
+    _          = require('lodash'),
     PhotoAuthor = require('./PhotoAuthor.jsx'),
+    PhotoDescription = require('./PhotoDescription.jsx'),
     PhotoImage = require('./PhotoImage.jsx'),
     PhotoTitle = require('./PhotoTitle.jsx');
 
@@ -30,7 +31,10 @@ var React      = require('react'),
           <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
           {
             (this.state.loading && "Loading...") ||
-            (<PhotoAuthor owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />)
+            ([
+              <PhotoAuthor owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />,
+              <PhotoDescription description={this.props.photo.description} />
+            ])
           }
         </div>
       );

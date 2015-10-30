@@ -34,6 +34,7 @@
     "reactify": "^1.1.1",
     "readable-stream": "^2.0.3",
     "rquery": "^3.0.1",
+    "sanitize-html": "^1.11.1",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "testdom": "^2.0.0",
