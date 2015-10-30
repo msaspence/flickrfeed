@@ -16,6 +16,10 @@ describe('Photo', function() {
       isfriend: 0,
       ispublic: 1,
       description: "My photo's description",
+      tags: [
+        { tag: "mytag", raw: "My Tag" },
+        { tag: "mytag2", raw: "My Second Tag" }
+      ],
       owner: "owner_id",
       owner_display: "Owner String",
       secret: "flickrsecret",
@@ -55,6 +59,13 @@ describe('Photo', function() {
       photoModel.trigger();
       description = renderedDOM.querySelector(".description")
       expect(description.textContent).to.equal('My photo\'s description');
+    });
+
+    it('renders the tags', function () {
+      render();
+      photoModel.trigger();
+      description = renderedDOM.querySelector(".tag")
+      expect(description.textContent).to.equal('My Tag');
     });
 
   });

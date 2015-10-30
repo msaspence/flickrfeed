@@ -1,9 +1,10 @@
-var React      = require('react'),
-    _          = require('lodash'),
-    PhotoAuthor = require('./PhotoAuthor.jsx'),
+var React            = require('react'),
+    _                = require('lodash'),
+    PhotoAuthor      = require('./PhotoAuthor.jsx'),
     PhotoDescription = require('./PhotoDescription.jsx'),
-    PhotoImage = require('./PhotoImage.jsx'),
-    PhotoTitle = require('./PhotoTitle.jsx');
+    PhotoImage       = require('./PhotoImage.jsx'),
+    PhotoTags        = require('./PhotoTags.jsx');
+    PhotoTitle       = require('./PhotoTitle.jsx');
 
 (function(React, _, module, undefined) {
   module.exports = React.createClass({
@@ -32,8 +33,9 @@ var React      = require('react'),
           {
             (this.state.loading && "Loading...") ||
             ([
-              <PhotoAuthor owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />,
-              <PhotoDescription description={this.props.photo.description} />
+              <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />,
+              <PhotoDescription key="description" description={this.props.photo.description} />,
+              <PhotoTags key="tags" tags={this.props.photo.tags} />
             ])
           }
         </div>

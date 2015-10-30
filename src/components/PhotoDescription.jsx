@@ -9,7 +9,7 @@ var React = require('react'),
         allowedTags: [ 'b', 'i', 'em', 'strong', 'a', 'p' ],
         allowedAttributes: { 'a': [ 'href' ] }
       });
-      cleanDescription = cleanDescription.replace(/\<a/g, '<a target="_blank"');
+      cleanDescription = cleanDescription.replace(/<a/g, '<a target="_blank"');
       return (
         <div className='description' dangerouslySetInnerHTML={{__html: cleanDescription}} />
       );
