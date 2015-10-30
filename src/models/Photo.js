@@ -16,6 +16,7 @@ var _ = require('lodash');
 
         flickr.photos.getInfo({ photo_id: data.id }, function(a, data) {
           me.description = data.photo.description._content;
+          me.owner_display = data.photo.owner.username;
           me.trigger();
         });
       }
