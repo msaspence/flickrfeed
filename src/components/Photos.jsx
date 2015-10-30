@@ -1,7 +1,10 @@
 var React = require('react'),
+    _          = require('lodash'),
     Photo = require('./Photo.jsx');
 
-(function(React, module, undefined) {
+window.photos = [];
+
+(function(React, _, module, undefined) {
   module.exports = React.createClass({
 
     getInitialState: function() {
@@ -10,9 +13,9 @@ var React = require('react'),
       };
     },
 
-    componentWillMount: function() {
+    componentDidMount: function() {
       if (this.props.feed) {
-        this.props.feed.subscribe('update', this.photosUpdated);
+        this.props.feed.subscribe('update', _.bind(this.photosUpdated, this));
       }
     },
 
@@ -41,4 +44,4 @@ var React = require('react'),
     }
 
   });
-}(React, module));
+}(React, _, module));

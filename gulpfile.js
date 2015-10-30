@@ -153,6 +153,5 @@ gulp.task('clean', function(cb) {
   return gulp.src(paths, { read: false })
     .pipe(mocha({
       reporter: 'nyan',
-      // require: [path.join(__dirname, 'test' , 'helper.js')]
     }));
 });

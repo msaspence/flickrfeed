@@ -1,28 +1,24 @@
 require('../helper.js')
 
-var Feed,
+var Feed  = require('../../src/services/Feed.js'),
+    Photo = require('../../src/models/Photo.js'),
     feed,
     server;
 
 describe('Feed', function() {
 
   beforeEach(function() {
-    Feed = require('../../src/services/Feed.js');
     feed = new Feed();
   });
 
   describe('#update()', function () {
 
-    beforeEach(function() {
-      server = sinon.fakeServer.create();
-    });
-
-    it('updates photos and triggers update', function () {
+    it('updates photos and triggers update', sinon.test(function () {
       var photos = [];
-      var mockFlickr = sinon.mock(feed.flickr.photos)
+      var mockFlickr = this.mock(feed.flickr.photos)
         .expects("getRecent")
         .once();
-      var mock = sinon.mock(feed)
+      var mock = this.mock(feed)
          .expects("trigger")
          .once()
          .withArgs('update', photos);
@@ -32,7 +28,7 @@ describe('Feed', function() {
 
       mockFlickr.verify();
       mock.verify();
-    });
+    }));
 
   });
 
@@ -55,6 +51,22 @@ describe('Feed', function() {
       feed.subscribe('update', my_callback);
       feed.trigger('update');
       expect(my_callback).to.have.been.called;
+    });
+
+  });
+
+  describe('#initiatePhotos()', function () {
+
+    it('replaces each photo with a Photo and calls update on them', function () {
+      result = feed.initiatePhotos([{id:0},{id:1},{id:2}])
+      expect(result.length).to.equal(3);
+      [0,1,2].forEach(function(i) {
+        expect(result[i]).to.be.an.instanceof(Photo);
+        expect(result[i].id).to.equal(i);
+        // Expect result[i] to have recieved update()
+        // Not sure how to test for this but leaving
+        // comments for the sake of specification
+      });
     });
 
   });

@@ -1,4 +1,7 @@
 require("flickrapi/browser/flickrapi.js");
+
+var Photo = require('../models/Photo.js');
+
 (function(Flickr, module) {
 
   var Feed = function() {
@@ -16,8 +19,17 @@ require("flickrapi/browser/flickrapi.js");
       this.flickr.photos.getRecent({
       }, function(err, result) {
         if(err) { throw new Error(err); }
-        me.photos = result.photos.photo;
+        me.photos = me.initiatePhotos(result.photos.photo);
         me.trigger('update', me.photos);
+      });
+    };
+
+    this.initiatePhotos = function(photos) {
+      var me = this;
+      return photos.map(function(photo) {
+        var photo = new Photo(photo, me.flickr);
+        photo.update();
+        return photo;
       });
     };
 
