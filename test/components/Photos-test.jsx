@@ -28,10 +28,10 @@ describe('Photos', function() {
       mock.verify();
     }));
 
-    context("when the feed returns no photos", function() {
-      it('renders empty message', function () {
+    context("when the feed is initially loading", function() {
+      it('renders loading message', function () {
         render();
-        expect(renderedDOM.querySelector(".photos .empty p").textContent).to.equal("There are no photos to see here!");
+        expect(renderedDOM.querySelector(".photos .loading .text").textContent).to.equal("Loading...");
       });
     });
 
@@ -39,9 +39,19 @@ describe('Photos', function() {
       it('renders each photo', function () {
         feed.photos = feed.initiatePhotos([{id:'1', title:'Title 1'},{id:'2', title:'Title 2'},{id:'3', title:'Title 3'}]);
         render();
+        feed.trigger('update');
         ['1','2','3'].forEach(function(i) {
           expect(renderedDOM.querySelector(".photos .photo[data-id=\""+i+"\"]").textContent).to.contain("Title "+i);
         });
+      });
+    });
+
+    context("when the feed returns no photos", function() {
+      it('renders empty message', function () {
+        feed.photos = [];
+        render();
+        feed.trigger('update');
+        expect(renderedDOM.querySelector(".photos .empty p").textContent).to.equal("There are no photos to see here!");
       });
     });
 

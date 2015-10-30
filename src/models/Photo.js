@@ -19,7 +19,7 @@ var _ = require('lodash');
           me.trigger();
         });
       }
-    }
+    };
 
     this.subscribe = function(func) {
       if (this.subscriptions.indexOf(func) == -1) {

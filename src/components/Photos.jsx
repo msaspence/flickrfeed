@@ -9,7 +9,8 @@ window.photos = [];
 
     getInitialState: function() {
       return {
-        photos: (this.props.feed && this.props.feed.photos) || []
+        photos: (this.props.feed && this.props.feed.photos) || [],
+        loading: true
       };
     },
 
@@ -21,6 +22,7 @@ window.photos = [];
 
     photosUpdated: function() {
       this.setState({
+        loading: false,
         photos: this.props.feed.photos
       });
     },
@@ -28,7 +30,9 @@ window.photos = [];
     render: function() {
       var photos;
 
-      if (this.state.photos.length > 0) {
+      if (this.state.loading) {
+        photos = <div className="loading"><p className='text'>Loading...</p></div>;
+      } else if(this.state.photos.length > 0) {
         photos = this.state.photos.map(function (photo) {
           return <Photo photo={photo} key={photo.id}/>;
         });

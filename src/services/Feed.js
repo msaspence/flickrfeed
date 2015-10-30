@@ -27,9 +27,9 @@ var Photo = require('../models/Photo.js');
     this.initiatePhotos = function(photos) {
       var me = this;
       return photos.map(function(photo) {
-        var photo = new Photo(photo, me.flickr);
-        photo.update();
-        return photo;
+        var photoModel = new Photo(photo, me.flickr);
+        photoModel.update();
+        return photoModel;
       });
     };
 
