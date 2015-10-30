@@ -34,6 +34,13 @@ describe('Photo', function() {
       renderedDOM = ReactDOM.findDOMNode(photo)
     }
 
+    it('is initial in a loading state until loaded', function () {
+      render();
+      expect(renderedDOM.getAttribute('class')).to.contain('loading');
+      photoModel.trigger();
+      expect(renderedDOM.getAttribute('class')).to.not.contain('loading');
+    });
+
     it('renders a image', function () {
       render();
       expect(renderedDOM.querySelector("img").getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_flickrsecret_n.jpg');
