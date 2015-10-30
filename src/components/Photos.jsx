@@ -53,8 +53,10 @@ window.photos = [];
 
       return (
         <section className={classString}>
+          <div className="index">
+            {photos}
+          </div>
           <Loading spinner={this.spinnerOptions()} />
-          {photos}
         </section>
       );
     },
