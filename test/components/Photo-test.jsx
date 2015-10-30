@@ -9,7 +9,7 @@ describe('Photo', function() {
 
   beforeEach(function() {
     photoModel = new PhotoModel({
-      id: 'myphotoid',
+      id: 'my_photo_id',
       title: "My Photo",
       farm: 1,
       isfamily: 0,
@@ -30,14 +30,14 @@ describe('Photo', function() {
 
     it('renders a image', function () {
       render();
-      expect(renderedDOM.querySelector("img").getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/myphotoid_flickrsecret_n.jpg');
+      expect(renderedDOM.querySelector("img").getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_flickrsecret_n.jpg');
     });
 
     it('renders the title', function () {
       render();
       titleLink = renderedDOM.querySelector(".title a")
       expect(titleLink.textContent).to.equal('My Photo');
-      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/12345678@N08/myphotoid');
+      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/12345678@N08/my_photo_id');
     });
 
   });

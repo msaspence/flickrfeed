@@ -3,34 +3,23 @@ var PhotoTitle = require('../../src/components/PhotoTitle.jsx');
 
 describe('PhotoTitle', function() {
 
-  var photo,
-      photoData;
+  var photoTitle,
+      photo_id = "my_photo_id",
+      title = "My Photo",
+      owner = "owner_id";
 
-  beforeEach(function() {
-    photoData = {
-      id: 'myphotoid',
-      title: "My Photo",
-      farm: 1,
-      isfamily: 0,
-      isfriend: 0,
-      ispublic: 1,
-      owner: "12345678@N08",
-      secret: "flickrsecret",
-      server: "server1"
-    };
-  });
 
   describe('#render()', function () {
 
     var render = function() {
-      photo = TestUtils.renderIntoDocument(<PhotoTitle photo={photoData} />);
-      renderedDOM = ReactDOM.findDOMNode(photo)
+      photoTitle = TestUtils.renderIntoDocument(<PhotoTitle photo_id={photo_id} title={title} owner={owner} />);
+      renderedDOM = ReactDOM.findDOMNode(photoTitle)
     }
 
     it('renders a link to the image on Flickr', function () {
       render();
       titleLink = renderedDOM.querySelector("a")
-      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/12345678@N08/myphotoid');
+      expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/owner_id/my_photo_id');
       expect(titleLink.textContent).to.equal('My Photo');
     });
 

@@ -4,10 +4,10 @@ var React = require('react');
   module.exports = React.createClass({
 
     render: function() {
-      var href = 'https://www.flickr.com/photos/'+this.props.photo.owner+'/'+this.props.photo.id;
+      var href = 'https://www.flickr.com/photos/'+this.props.owner+'/'+this.props.photo_id;
       return (
         <h4 className='title'>
-          <a href={href}>{this.props.photo.title}</a>
+          <a href={href}>{this.props.title}</a>
         </h4>
       );
     }

@@ -25,8 +25,8 @@ var React = require('react'),
     render: function() {
       return (
         <div className="photo" data-id={this.props.photo.id}>
-          <PhotoImage photo={this.props.photo} size='n' />
-          <PhotoTitle photo={this.props.photo} />
+          <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} size='n' />
+          <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
           {
             (this.state.loading && "Loading...") ||
             (this.props.photo.description)
