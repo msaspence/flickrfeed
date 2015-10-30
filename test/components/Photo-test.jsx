@@ -68,6 +68,13 @@ describe('Photo', function() {
       expect(description.textContent).to.equal('My Tag');
     });
 
+    it('renders a loading spinner', function () {
+      render();
+      photoModel.trigger();
+      loading = renderedDOM.querySelector(".loading")
+      expect(loading.textContent).to.equal('Loading...');
+    });
+
   });
 
 });

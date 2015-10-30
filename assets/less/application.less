@@ -4,9 +4,11 @@
 
 .photo {
   height: 306px;
+  position: relative;
 
   .image {
     display: block;
+    opacity: 1;
     height: 120px;
     width: 170px;
     overflow: hidden;
@@ -17,6 +19,7 @@
   }
 
   .caption {
+    opacity: 1;
     padding: 5px 2px;
 
     h4.title {
@@ -46,6 +49,41 @@
       .tag {
         font-weight: normal;
       }
+    }
+  }
+
+  .caption,
+  .image {
+    .transition(~"opacity 0.3s");
+  }
+
+  .loading {
+    opacity: 0;
+    .transition(~"opacity 0.3s");
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 68px;
+    margin-left: -34px;
+    .spinner {
+      top: 14px;
+      left: -17px;
+    }
+    .text {
+      font-size: 20px;
+      color: #888;
+    }
+  }
+
+  &.loading {
+    .caption,
+    .image {
+      .transition(~"opacity 0.3s");
+      opacity: 0;
+    }
+    .loading {
+      opacity: 1;
+      .transition(~"opacity 0.3s");
     }
   }
 }

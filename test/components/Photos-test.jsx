@@ -10,6 +10,11 @@ describe('Photos', function() {
 
   beforeEach(function() {
     feed = new Feed();
+    // feed.flickr.photos.getRecent = sinon.stub();
+  });
+
+  afterEach(function() {
+    // feed.flickr.photos.getRecent.restore();
   });
 
   describe('#render()', function () {

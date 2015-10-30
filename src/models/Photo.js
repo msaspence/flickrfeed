@@ -14,13 +14,15 @@ var _ = require('lodash');
 
         var me = this;
 
-        flickr.photos.getInfo({ photo_id: data.id }, function(a, data) {
-          me.description = data.photo.description._content;
-          me.owner_display = data.photo.owner.username;
-          me.tags = data.photo.tags.tag.map(function(tag) {
-            return { tag: tag._content, raw: tag.raw };
-          });
-          me.trigger();
+        flickr.photos.getInfo({ photo_id: data.id }, function(err, data) {
+          if (data) {
+            me.description = data.photo.description._content;
+            me.owner_display = data.photo.owner.username;
+            me.tags = data.photo.tags.tag.map(function(tag) {
+              return { tag: tag._content, raw: tag.raw };
+            });
+            me.trigger();
+          }
         });
       }
     };
