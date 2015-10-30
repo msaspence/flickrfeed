@@ -1,6 +1,7 @@
-var React = require('react'),
-    _          = require('lodash'),
-    Photo = require('./Photo.jsx');
+var React    = require('react'),
+    _        = require('lodash'),
+    Loading  = require('./Loading.jsx'),
+    Photo    = require('./Photo.jsx');
 
 window.photos = [];
 
@@ -30,9 +31,9 @@ window.photos = [];
     render: function() {
       var photos;
 
-      if (this.state.loading) {
-        photos = <div className="loading"><p className='text'>Loading...</p></div>;
-      } else if(this.state.photos.length > 0) {
+      classString = this.state.loading ? "photos loading" : "photos";
+
+      if(this.state.photos.length > 0) {
         photos = _.chunk(this.state.photos, 6).map(function(row, i) {
           return (
             <div className="row" key={i}>
@@ -51,10 +52,22 @@ window.photos = [];
       }
 
       return (
-        <section className="photos">
+        <section className={classString}>
+          <Loading spinner={this.spinnerOptions()} />
           {photos}
         </section>
       );
+    },
+
+    spinnerOptions: function() {
+      return {
+        lines: 13,
+        lenght: 28,
+        scale: 0.5,
+        radius: 15,
+        color: '#888',
+        position: 'absolute'
+      };
     }
 
   });

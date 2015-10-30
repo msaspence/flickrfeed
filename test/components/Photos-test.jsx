@@ -33,12 +33,19 @@ describe('Photos', function() {
       mock.verify();
     }));
 
-    context("when the feed is initially loading", function() {
-      it('renders loading message', function () {
-        render();
-        expect(renderedDOM.querySelector(".photos .loading .text").textContent).to.equal("Loading...");
-      });
+    it('renders a loading spinner', function () {
+      render();
+      loading = renderedDOM.querySelector(".loading")
+      expect(loading.textContent).to.equal('Loading...');
     });
+
+    it('is initially in a loading state until loaded', function () {
+      render();
+      expect(renderedDOM.getAttribute('class')).to.contain('loading');
+      feed.trigger('update');
+      expect(renderedDOM.getAttribute('class')).to.not.contain('loading');
+    });
+
 
     context("when the feed returns photos", function() {
       it('renders each photo', function () {

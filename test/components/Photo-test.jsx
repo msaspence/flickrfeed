@@ -34,7 +34,7 @@ describe('Photo', function() {
       renderedDOM = ReactDOM.findDOMNode(photo)
     }
 
-    it('is initial in a loading state until loaded', function () {
+    it('is initially in a loading state until loaded', function () {
       render();
       expect(renderedDOM.getAttribute('class')).to.contain('loading');
       photoModel.trigger();
