@@ -7,7 +7,7 @@ var React = require('react');
       var href = 'https://www.flickr.com/people/'+this.props.owner_id;
       return (
         <h5 className='author'>
-          by <a href={href}>{this.props.owner}</a>
+          by <a href={href} target="_blank">{this.props.owner}</a>
         </h5>
       );
     }

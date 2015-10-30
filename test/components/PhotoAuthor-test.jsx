@@ -19,6 +19,7 @@ describe('PhotoAuthor', function() {
       authorLink = renderedDOM.querySelector("a")
       expect(renderedDOM.textContent).to.contain('by Owner String')
       expect(authorLink.getAttribute('href')).to.equal('https://www.flickr.com/people/owner_id');
+      expect(authorLink.getAttribute('target')).to.equal('_blank');
       expect(authorLink.textContent).to.equal('Owner String');
     });
 

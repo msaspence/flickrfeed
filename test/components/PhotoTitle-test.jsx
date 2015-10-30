@@ -20,6 +20,7 @@ describe('PhotoTitle', function() {
       render();
       titleLink = renderedDOM.querySelector("a")
       expect(titleLink.getAttribute('href')).to.equal('https://www.flickr.com/photos/owner_id/my_photo_id');
+      expect(titleLink.getAttribute('target')).to.equal('_blank');
       expect(titleLink.textContent).to.equal('My Photo');
     });
 
