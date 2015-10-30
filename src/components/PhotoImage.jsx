@@ -10,8 +10,8 @@ var React = require('react');
       var href = "https://www.flickr.com/photos/"+this.props.owner_id+"/"+this.props.photo_id;
 
       return (
-        <a target="_blank" href={href}>
-          <img src={src} className="image" />
+        <a target="_blank" href={href} className="image">
+          <img src={src} />
         </a>
       );
     }

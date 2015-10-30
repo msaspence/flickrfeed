@@ -27,17 +27,19 @@ var React            = require('react'),
 
     render: function() {
       return (
-        <div className="photo" data-id={this.props.photo.id}>
+        <div className="photo thumbnail" data-id={this.props.photo.id}>
           <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner_id={this.props.photo.owner} size='n' />
-          <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
-          {
-            (this.state.loading && "Loading...") ||
-            ([
-              <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />,
-              <PhotoDescription key="description" description={this.props.photo.description} />,
-              <PhotoTags key="tags" tags={this.props.photo.tags} />
-            ])
-          }
+          <div className="caption">
+            <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
+            {
+              (this.state.loading && "Loading...") ||
+              ([
+                <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />,
+                <PhotoDescription key="description" description={this.props.photo.description} />,
+                <PhotoTags key="tags" tags={this.props.photo.tags} />
+              ])
+            }
+          </div>
         </div>
       );
     }
