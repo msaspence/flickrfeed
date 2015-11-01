@@ -36,7 +36,7 @@ var React            = require('react'),
             <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
             <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />
             <PhotoDescription key="description" description={this.props.photo.description} />
-            <PhotoTags key="tags" tags={this.props.photo.tags} setSearchQuery={this.props.setSearchQuery} />
+            <PhotoTags key="tags" tags={this.props.photo.tags} searchQuery={this.props.searchQuery} setSearchQuery={this.props.setSearchQuery} />
           </div>
           <Loading spinner={this.spinnerOptions()} />
         </div>

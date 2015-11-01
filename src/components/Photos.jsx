@@ -30,7 +30,6 @@ window.photos = [];
       var photos;
 
       classString = this.props.feed.loading ? "photos loading" : "photos";
-
       var me = this;
       if(this.state.photos.length > 0) {
         photos = _.chunk(this.state.photos, 6).map(function(row, i) {
@@ -39,7 +38,7 @@ window.photos = [];
               {row.map(function (photo, j) {
                 return (
                   <div className="col-sm-3 col-md-2" key={j}>
-                    <Photo photo={photo} key={photo.id} setSearchQuery={me.props.setSearchQuery} />
+                    <Photo photo={photo} key={photo.id} searchQuery={me.props.searchQuery} setSearchQuery={me.props.setSearchQuery} />
                   </div>
                 );
               })}

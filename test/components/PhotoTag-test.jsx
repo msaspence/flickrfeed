@@ -7,8 +7,8 @@ describe('PhotoTag', function() {
       tag = "mytag",
       raw = "My Tag";
 
-  var render = function(spy) {
-    photoTag = TestUtils.renderIntoDocument(<PhotoTag tag={tag} raw={raw} setSearchQuery={spy} />);
+  var render = function(spy, query) {
+    photoTag = TestUtils.renderIntoDocument(<PhotoTag tag={tag} raw={raw} setSearchQuery={spy} searchQuery={query} />);
     renderedDOM = ReactDOM.findDOMNode(photoTag)
   };
 
@@ -20,6 +20,13 @@ describe('PhotoTag', function() {
       expect(renderedDOM.getAttribute('target')).to.equal('_blank');
       expect(renderedDOM.getAttribute('href')).to.equal('https://www.flickr.com/search/?tags=mytag');
       expect(renderedDOM.textContent).to.equal('My Tag');
+    });
+
+    context("when the searchQuery is the same as the tag", function() {
+      it("uses the label-primary class", function() {
+        render(null, 'tag:mytag');
+        expect(renderedDOM.getAttribute('class')).to.equal('tag label label-primary');
+      });
     });
 
   });

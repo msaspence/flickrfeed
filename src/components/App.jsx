@@ -26,7 +26,6 @@ var React   = require('react'),
     },
 
     setSearchQuery: function(searchQuery) {
-      console.log( searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
       this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
     },
 
@@ -37,7 +36,7 @@ var React   = require('react'),
       return (
         <div className="container">
           <Header text="Flickr Photo Stream" searchQuery={this.props.params.searchQuery} setSearchQuery={this.setSearchQuery} />
-          <Photos feed={this.props.feed} setSearchQuery={this.setSearchQuery} />
+          <Photos feed={this.props.feed} searchQuery={this.props.params.searchQuery} setSearchQuery={this.setSearchQuery} />
         </div>
       );
     }

@@ -8,7 +8,7 @@ var React = require('react'),
     render: function() {
       var me = this;
       tags = (this.props.tags || []).map(function(tag) {
-        return [<PhotoTag key={tag.tag} tag={tag.tag} raw={tag.raw} setSearchQuery={me.props.setSearchQuery} />, " "];
+        return [<PhotoTag key={tag.tag} tag={tag.tag} raw={tag.raw} searchQuery={me.props.searchQuery} setSearchQuery={me.props.setSearchQuery} />, " "];
       });
 
       return (
