@@ -2,6 +2,52 @@
 
 @grid-gutter-width: 10px;
 
+.page-header {
+  .clearfix;
+  margin-top: 0px;
+  
+  h1 {
+    width: 350px;
+    display: block;
+    .pull-left;
+  }
+  
+  .search {
+    .pull-right;
+    margin-top: 25px;
+    width: 281px;
+    position: relative;
+
+    input {
+      .pull-left;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    .clear {
+      position: absolute;
+      top: 8px;
+      left: 175px;
+      font-size: 17px;
+      color: #888;
+      cursor: pointer;
+      opacity: 1;
+      .transition(~"opacity 0.3s");
+      &:hover {
+        color: #555;
+        text-decoration: none;
+      }
+    }
+
+    &.empty {
+      .clear {
+        opacity: 0;
+        .transition(~"opacity 0.3s");
+      }
+    }
+  }
+}
+
 .photos {
   .index {
     z-index: 2;

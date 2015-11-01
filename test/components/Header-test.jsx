@@ -20,6 +20,10 @@ describe('Header', function() {
       expect(renderedDOM.querySelector(".page-header h1").textContent).to.equal("My Heading");
     });
 
+    it('renders the search component', function () {
+      expect(renderedDOM.querySelector(".page-header .search input")).to.not.be.null;
+    });
+
   });
 
 });

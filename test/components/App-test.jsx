@@ -66,4 +66,14 @@ describe('App', function() {
 
   });
 
+  describe('#setSearchQuery', function() {
+    context("when the search query is empty", function() {
+      it("navigations to /", function() {});
+    });
+
+    context("when the search query is something", function() {
+      it("navigations to /search/query", function() {});
+    });
+  });
+
 });
