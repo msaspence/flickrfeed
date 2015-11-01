@@ -8,20 +8,21 @@ var App = require('../../src/components/App.jsx'),
 
 describe('App', function() {
 
+  var params = {},
+      app,
+      feed = new Feed();
+
+
+  var render = function() {
+    shallowRenderer = TestUtils.createRenderer();
+
+    shallowRenderer.render(
+      <App params={params} feed={feed} />
+    );
+    renderedDOM = shallowRenderer.getRenderOutput();
+  };
+
   describe('#render()', function () {
-
-    var params = {},
-        app,
-        feed = new Feed();
-
-    var render = function() {
-      shallowRenderer = TestUtils.createRenderer();
-
-      shallowRenderer.render(
-        <App params={params} feed={feed} ref={function(c) { console.log(app = c) }} />
-      );
-      renderedDOM = shallowRenderer.getRenderOutput();
-    };
 
     it("renders application Header", function () {
       render();
@@ -68,11 +69,25 @@ describe('App', function() {
 
   describe('#setSearchQuery', function() {
     context("when the search query is empty", function() {
-      it("navigations to /", function() {});
+      it("navigations to /",  sinon.test(function() {
+        render();
+        app = shallowRenderer._instance._instance;
+        app.history = {};
+        app.history.pushState = this.spy();
+        app.setSearchQuery("");
+        expect(app.history.pushState).to.have.been.calledWith(null, "/");
+      }));
     });
 
     context("when the search query is something", function() {
-      it("navigations to /search/query", function() {});
+      it("navigations to /search/query", sinon.test(function() {
+        render();
+        app = shallowRenderer._instance._instance;
+        app.history = {};
+        app.history.pushState = this.spy();
+        app.setSearchQuery("/query");
+        expect(app.history.pushState).to.have.been.calledWith(null, "/search/%2Fquery");
+      }));
     });
   });
 

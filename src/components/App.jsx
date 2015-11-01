@@ -26,7 +26,8 @@ var React   = require('react'),
     },
 
     setSearchQuery: function(searchQuery) {
-      this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+searchQuery);
+      console.log( searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
+      this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
     },
 
     render: function() {
