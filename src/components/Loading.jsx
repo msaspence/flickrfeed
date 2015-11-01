@@ -15,7 +15,7 @@ var React      = require('react'),
 
     render: function() {
       return (
-        <div className="loading">
+        <div className="loading-indicator">
           <div className="text">Loading...</div>
         </div>
       );

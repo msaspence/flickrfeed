@@ -9,12 +9,12 @@
   }
 
   .empty,
-  .row {
+  .index {
     opacity: 1;
     .transition(~"opacity 0.3s");
   }
 
-  .loading {
+  .loading-indicator {
     opacity: 0;
     z-index: 1;
     .transition(~"opacity 0.3s");
@@ -35,12 +35,12 @@
 
   &.loading {
     .empty,
-    .row {
+    .index {
       opacity: 0;
       .transition(~"opacity 0.3s");
     }
 
-    .loading {
+    .loading-indicator {
       opacity: 1;
       .transition(~"opacity 0.3s");
     }
@@ -101,7 +101,7 @@
       .transition(~"opacity 0.3s");
     }
 
-    .loading {
+    .loading-indicator {
       opacity: 0;
       z-index: 1;
       .transition(~"opacity 0.3s");
@@ -126,7 +126,7 @@
         .transition(~"opacity 0.3s");
         opacity: 0;
       }
-      .loading {
+      .loading-indicator {
         opacity: 1;
         .transition(~"opacity 0.3s");
       }
