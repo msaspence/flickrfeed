@@ -5,6 +5,7 @@ var argv = require('yargs').argv,
     browserify = require('browserify'),
     browserSync = require('browser-sync').create(),
     buffer = require('vinyl-buffer'),
+    historyApiFallback = require('connect-history-api-fallback'),
     less = require('gulp-less'),
     cssmin = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
@@ -31,7 +32,10 @@ gulp.task('clean', function(cb) {
 .task('server', ['less', 'js'], function(cb) {
   return browserSync.init({
     server: {
-      baseDir: './'
+      baseDir: './',
+      middleware: [ historyApiFallback({
+        logger: console.log.bind(console)
+      }) ]
     },
     ghostMode: true,
     reloadOnRestart: true,

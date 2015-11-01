@@ -1,16 +1,21 @@
-var React    = require('react'),
-    ReactDOM = require('react-dom'),
-    _        = require('lodash'),
-    App      = require('./components/App.jsx'),
-    Feed     = require('./services/Feed.js');
+var React         = require('react'),
+    ReactDOM      = require('react-dom'),
+    Router        = require('react-router/lib/Router'),
+    Route         = require('react-router/lib/Route'),
+    history       = require('history').createHistory(),
+    ReactDOM      = require('react-dom'),
+    _             = require('lodash'),
+    App           = require('./components/App.jsx');
+    E404          = require('./components/E404.jsx');
 
 (function(React, ReactDOM, _) {
 
-  feed = new Feed();
-  feed.update();
-
   var render = function() {
-    ReactDOM.render(<App feed={feed}/>, document.getElementById('app'));
+    ReactDOM.render(<Router history={history}>
+      <Route path="/" component={App}>
+      </Route>
+      <Route path="/*" component={E404}/>
+    </Router>, document.getElementById('app'));
   };
   render();
 
