@@ -7,12 +7,12 @@ describe('PhotoAuthor', function() {
       owner_id = 'owner_id',
       owner = "Owner String";
 
-  describe('#render()', function () {
+  var render = function(spy) {
+    photoAuthor = TestUtils.renderIntoDocument(<PhotoAuthor owner={owner} owner_id={owner_id} setSearchQuery={spy} />);
+    renderedDOM = ReactDOM.findDOMNode(photoAuthor)
+  }
 
-    var render = function() {
-      photoAuthor = TestUtils.renderIntoDocument(<PhotoAuthor owner={owner} owner_id={owner_id} />);
-      renderedDOM = ReactDOM.findDOMNode(photoAuthor)
-    }
+  describe('#render()', function () {
 
     it('renders a link to the image on Flickr', function () {
       render();
@@ -23,6 +23,15 @@ describe('PhotoAuthor', function() {
       expect(authorLink.textContent).to.equal('Owner String');
     });
 
+  });
+
+  describe('#onClick', function() {
+    it('sets search query based on tag', sinon.test(function() {
+      spy = sinon.spy();
+      render(spy);
+      TestUtils.Simulate.click(photoAuthor.refs.author);
+      expect(spy).to.have.been.calledWith('owner:owner_id');
+    }));
   });
 
 });

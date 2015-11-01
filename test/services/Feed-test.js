@@ -76,6 +76,10 @@ describe('Feed', function() {
     it("extracts tags", sinon.test(function() {
       expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({ text: "my search query", tags: "mytag:_withsymbols,hello", tag_mode: 'all' });
     }));
+
+    it("extracts owner", sinon.test(function() {
+      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({ text: "my search query", user_id: "ownerid" });
+    }));
   });
 
   describe('#getRecent', function() {

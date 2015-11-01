@@ -34,7 +34,7 @@ var React            = require('react'),
           <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner_id={this.props.photo.owner} size='n' />
           <div className="caption">
             <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
-            <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} />
+            <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} setSearchQuery={this.props.setSearchQuery} />
             <PhotoDescription key="description" description={this.props.photo.description} />
             <PhotoTags key="tags" tags={this.props.photo.tags} searchQuery={this.props.searchQuery} setSearchQuery={this.props.setSearchQuery} />
           </div>

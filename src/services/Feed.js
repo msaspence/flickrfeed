@@ -35,10 +35,15 @@ var Photo = require('../models/Photo.js');
     this.optionizeSearchQuery = function(searchQuery) {
       r = {};
       tags = searchQuery.match(/tag:([^ ]+)/g);
-      if (tags  ) {
+      if (tags) {
         searchQuery = searchQuery.replace(/tag:([^ ]+)/g, "");
         r.tag_mode = 'all';
         r.tags = tags.map(function(x) { return x.replace(/^tag:/,""); }).join(',');
+      }
+      owner = searchQuery.match(/owner:([^ ]+)/);
+      if (owner && owner[0]) {
+        searchQuery = searchQuery.replace(/owner:([^ ]+)/g, "");
+        r.user_id = owner[0].replace(/owner:/, "");
       }
       r.text = searchQuery.replace(/  +/g, " ");
 
