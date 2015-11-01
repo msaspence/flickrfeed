@@ -35,13 +35,14 @@ describe('Photos', function() {
 
     it('renders a loading spinner', function () {
       render();
-      loading = renderedDOM.querySelector(".loading")
+      loading = renderedDOM.querySelector(".loading-indicator")
       expect(loading.textContent).to.equal('Loading...');
     });
 
     it('is initially in a loading state until loaded', function () {
       render();
       expect(renderedDOM.getAttribute('class')).to.contain('loading');
+      feed.loading = false;
       feed.trigger('update');
       expect(renderedDOM.getAttribute('class')).to.not.contain('loading');
     });

@@ -8,6 +8,7 @@ var Photo = require('../models/Photo.js');
 
     this.photos = [];
     this.subscriptions = {};
+    this.loading = true;
 
     this.flickr = new Flickr({
       api_key: "814f557fdd0320fb1fa4711047a5e355",
@@ -22,6 +23,7 @@ var Photo = require('../models/Photo.js');
         me.photos = me.initiatePhotos(result.photos.photo);
         me.trigger('update', me.photos);
       });
+      this.loading = true;
     };
 
     this.initiatePhotos = function(photos) {
