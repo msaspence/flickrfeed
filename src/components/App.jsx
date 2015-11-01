@@ -34,11 +34,10 @@ var React   = require('react'),
       if (this.state.previousSearchQuery !== this.props.params.searchQuery) {
         this.props.feed.update(this.props.params.searchQuery);
       }
-
       return (
         <div className="container">
           <Header text="Flickr Photo Stream" searchQuery={this.props.params.searchQuery} setSearchQuery={this.setSearchQuery} />
-          <Photos feed={this.props.feed} />
+          <Photos feed={this.props.feed} setSearchQuery={this.setSearchQuery} />
         </div>
       );
     }

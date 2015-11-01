@@ -6,8 +6,9 @@ var React = require('react'),
   module.exports = React.createClass({
 
     render: function() {
+      var me = this;
       tags = (this.props.tags || []).map(function(tag) {
-        return [<PhotoTag key={tag.tag} tag={tag.tag} raw={tag.raw} />, " "];
+        return [<PhotoTag key={tag.tag} tag={tag.tag} raw={tag.raw} setSearchQuery={me.props.setSearchQuery} />, " "];
       });
 
       return (

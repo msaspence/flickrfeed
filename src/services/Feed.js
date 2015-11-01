@@ -33,9 +33,16 @@ var Photo = require('../models/Photo.js');
     };
 
     this.optionizeSearchQuery = function(searchQuery) {
-      return {
-        text: searchQuery
-      };
+      r = {};
+      tags = searchQuery.match(/tag:([^ ]+)/g);
+      if (tags  ) {
+        searchQuery = searchQuery.replace(/tag:([^ ]+)/g, "");
+        r.tag_mode = 'all';
+        r.tags = tags.map(function(x) { return x.replace(/^tag:/,""); }).join(',');
+      }
+      r.text = searchQuery.replace(/  +/g, " ");
+
+      return r;
     };
 
     this.getRecent = function() {

@@ -6,8 +6,13 @@ var React = require('react');
     render: function() {
       var href = 'https://www.flickr.com/search/?tags='+this.props.tag;
       return (
-        <a href={href} target='_blank' className='tag label label-default'>{this.props.raw}</a>
+        <a href={href} ref='tag' onClick={this.onClick} target='_blank' className='tag label label-default'>{this.props.raw}</a>
       );
+    },
+
+    onClick: function(event) {
+      event.preventDefault();
+      this.props.setSearchQuery('tag:'+this.props.tag);
     }
 
   });

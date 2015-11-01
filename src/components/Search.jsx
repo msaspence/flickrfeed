@@ -8,6 +8,10 @@ var React = require('react'),
       return { inputValue: this.props.searchQuery };
     },
 
+    componentWillReceiveProps: function(nextProps) {
+      this.setState({ inputValue: nextProps.searchQuery });
+    },
+
     render: function() {
       emptyClass = (!this.state.inputValue || this.state.inputValue === "") ? ' empty' : '';
       return (

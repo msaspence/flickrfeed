@@ -5,13 +5,13 @@
 .page-header {
   .clearfix;
   margin-top: 0px;
-  
+
   h1 {
     width: 350px;
     display: block;
     .pull-left;
   }
-  
+
   .search {
     .pull-right;
     margin-top: 25px;
@@ -26,12 +26,15 @@
 
     .clear {
       position: absolute;
-      top: 8px;
-      left: 175px;
+      top: 4px;
+      background: white;
+      padding: 4px;
+      left: 172px;
       font-size: 17px;
       color: #888;
       cursor: pointer;
       opacity: 1;
+
       .transition(~"opacity 0.3s");
       &:hover {
         color: #555;
@@ -144,6 +147,7 @@
     .image {
       z-index: 2;
       opacity: 1;
+      position: relative;
       .transition(~"opacity 0.3s");
     }
 

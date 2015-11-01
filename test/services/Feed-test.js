@@ -72,6 +72,10 @@ describe('Feed', function() {
     it("moves the string into an object", sinon.test(function() {
       expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({ text: "my search query" });
     }));
+
+    it("extracts tags", sinon.test(function() {
+      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({ text: "my search query", tags: "mytag:_withsymbols,hello", tag_mode: 'all' });
+    }));
   });
 
   describe('#getRecent', function() {
