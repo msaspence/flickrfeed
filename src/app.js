@@ -13,6 +13,7 @@ var React         = require('react'),
   var render = function() {
     ReactDOM.render(<Router history={history}>
       <Route path="/" component={App}>
+        <Route path="/search/:searchQuery" component={App}/>
       </Route>
       <Route path="/*" component={E404}/>
     </Router>, document.getElementById('app'));

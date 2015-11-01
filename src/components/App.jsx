@@ -9,17 +9,25 @@ var React = require('react'),
 
   module.exports = React.createClass({
 
+    getInitialState: function() {
+      return { previousSearchQuery: null };
+    },
+
     getDefaultProps: function() {
       return {
         feed: new Feed()
       };
     },
 
-    componentWillMount: function() {
-      this.props.feed.update();
+    componentWillReceiveProps: function (nextProps) {
+      this.setState({ previousSearchQuery: this.props.params.searchQuery });
     },
 
     render: function() {
+      if (this.state.previousSearchQuery !== this.props.params.searchQuery) {
+        this.props.feed.update(this.props.params.searchQuery);
+      }
+
       return (
         <div className="container">
           <Header text="Flickr Photo Stream" />

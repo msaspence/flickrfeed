@@ -11,24 +11,108 @@ describe('Feed', function() {
     feed = new Feed();
   });
 
-  describe('#update()', function () {
+  describe('#update', function () {
 
-    it('updates photos and triggers update', sinon.test(function () {
-      var photos = [];
+    it("set loading to true", function() {
+      feed.update();
+      expect(feed.loading).to.be.true;
+    });
+
+    context("when search query is null", function() {
+      it("gets recent", sinon.test(function() {
+        var mock = this.mock(feed)
+          .expects('getRecent')
+          .once();
+        feed.update(null);
+        mock.verify();
+      }));
+    });
+
+    context("when search query is empty", function() {
+      it("gets recent", sinon.test(function() {
+        var mock = this.mock(feed)
+          .expects('getRecent')
+          .once();
+        feed.update("");
+        mock.verify();
+      }));
+    });
+
+    context("when search query is provided", function() {
+      it("calls search", sinon.test(function() {
+        var mock = this.mock(feed)
+          .expects('search')
+          .once();
+        feed.update("my search query");
+        mock.verify();
+      }));
+    });
+
+  });
+
+  describe('#search', function() {
+    it("calls the Flickr API search", sinon.test(function() {
+      callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
-        .expects("getRecent")
+        .expects('search')
+        .withArgs({ text: 'my search query' }, feed.photosUpdated)
         .once();
       var mock = this.mock(feed)
-         .expects("trigger")
-         .once()
-         .withArgs('update', photos);
-
-      feed.update();
-      mockFlickr.yield(null, {"photos":{"page":1,"pages":1,"perpage":100,"total":1,"photo": photos},"stat":"ok"});
-
-      mockFlickr.verify();
+        .expects('optionizeSearchQuery')
+        .withArgs('my search query')
+        .once()
+        .returns({ text: 'my search query' });
+      feed.search('my search query', callback);
       mock.verify();
+      mockFlickr.verify();
     }));
+  });
+
+  describe('#optionizeSearchQuery', function() {
+    it("moves the string into an object", sinon.test(function() {
+      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({ text: "my search query" });
+    }));
+  });
+
+  describe('#getRecent', function() {
+    it("calls the Flickr API getRecent", sinon.test(function() {
+      callback = sinon.spy();
+      var mockFlickr = this.mock(feed.flickr.photos)
+        .expects('getRecent')
+        .withArgs({}, feed.photosUpdated)
+        .once();
+      feed.getRecent();
+      mockFlickr.verify();
+    }));
+  });
+
+  describe('#photosUpdated', function() {
+
+    var photos = { photos: { photo: [{a: 'b'}] } };
+
+    it ("initiates photos", sinon.test(function() {
+      initiatedPhotos = { a: 'c' }
+      var mock = this.mock(feed)
+        .expects('initiatePhotos')
+        .withArgs([{a: 'b'}])
+        .once()
+        .returns({ a: 'c' });
+      feed.photosUpdated(null, photos);
+      mock.verify();
+      expect(feed.photos).to.deep.equal(initiatedPhotos);
+    }));
+
+    it("loading is set to false", function() {
+      feed.photosUpdated(null, photos);
+      expect(feed.loading).to.be.false;
+    });
+
+    it("triggers update", function() {
+      spy = sinon.spy();
+      feed.subscribe('update', spy);
+      feed.photosUpdated(null, photos);
+      expect(spy).to.have.been.called;
+    });
 
   });
 

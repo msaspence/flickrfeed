@@ -1,8 +1,10 @@
 require("flickrapi/browser/flickrapi.js");
 
+var _ = require('lodash');
+
 var Photo = require('../models/Photo.js');
 
-(function(Flickr, module) {
+(function(Flickr, _, module) {
 
   var Feed = function() {
 
@@ -15,16 +17,38 @@ var Photo = require('../models/Photo.js');
       progress: false
     });
 
-    this.update = function() {
+    this.update = function(searchQuery) {
       var me = this;
-      this.flickr.photos.getRecent({
-      }, function(err, result) {
-        if(err) { throw new Error(err); }
-        me.photos = me.initiatePhotos(result.photos.photo);
-        me.trigger('update', me.photos);
-      });
       this.loading = true;
+
+      if (searchQuery && searchQuery !== "") {
+        this.search(searchQuery);
+      } else {
+        this.getRecent();
+      }
     };
+
+    this.search = function(searchQuery) {
+      this.flickr.photos.search(this.optionizeSearchQuery(searchQuery), this.photosUpdated);
+    };
+
+    this.optionizeSearchQuery = function(searchQuery) {
+      return {
+        text: searchQuery
+      };
+    };
+
+    this.getRecent = function() {
+      this.flickr.photos.getRecent({}, this.photosUpdated);
+    };
+
+    this.photosUpdated = _.bind(function(err, result) {
+      if(err) { throw new Error(err); }
+      this.photos = this.initiatePhotos(result.photos.photo);
+      this.loading = false;
+      this.trigger('update', this.photos);
+    }, this);
+
 
     this.initiatePhotos = function(photos) {
       var me = this;
@@ -54,4 +78,4 @@ var Photo = require('../models/Photo.js');
 
   };
   module.exports = Feed;
-}(window.Flickr, module));
+}(window.Flickr, _, module));
