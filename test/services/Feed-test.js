@@ -242,6 +242,7 @@ describe('Feed', function() {
       feed.update = this.spy();
       feed.loading = false;
       feed.page = 2;
+      feed.photos = [{}];
       feed.loadMore();
       expect(feed.update).to.have.been.calledWith(true, 3);
     }));
@@ -250,6 +251,16 @@ describe('Feed', function() {
       it("calls update with the search query and the next page", sinon.test(function() {
         feed.update = this.spy();
         feed.loading = true;
+        feed.loadMore();
+        expect(feed.update).to.have.not.been.called;
+      }));
+    });
+
+    context("when feed has no results to load", function() {
+      it("calls update with the search query and the next page", sinon.test(function() {
+        feed.update = this.spy();
+        feed.loading = true;
+        feed.photos = [];
         feed.loadMore();
         expect(feed.update).to.have.not.been.called;
       }));

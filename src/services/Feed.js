@@ -38,7 +38,7 @@ var Photo = require('../models/Photo.js');
     };
 
     this.loadMore = function() {
-      if (!this.loading) {
+      if (!this.loading && this.photos.length > 0) {
         this.update(true, this.page+1);
       }
     };

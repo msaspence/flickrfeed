@@ -72,9 +72,7 @@ var React    = require('react'),
         bottom = this.refs.photos.bottom();
         if (bottom-5000 < window.innerHeight) {
           var self = this;
-          // setTimeout(function() {
-            self.props.feed.loadMore();
-          // },1000);
+          self.props.feed.loadMore();
         }
       }
     }
