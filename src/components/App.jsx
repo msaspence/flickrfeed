@@ -43,10 +43,15 @@ var React    = require('react'),
     },
 
     render: function() {
+      if (this.state.previousSearchQuery != this.props.params.searchQuery) {
+        searchQuery = this.props.params.searchQuery
+      } else {
+        searchQuery = undefined;
+      }
       return (
         <div className="container">
           <Header text="Flickr Photo Stream"
-                  searchQuery={this.props.params.searchQuery}
+                  searchQuery={searchQuery}
                   setSearchQuery={this.setSearchQuery} />
           <Photos searchQuery={this.props.params.searchQuery}
                   setSearchQuery={this.setSearchQuery}

@@ -9,7 +9,16 @@ var React = require('react'),
     },
 
     componentWillReceiveProps: function(nextProps) {
-      this.setState({ inputValue: nextProps.searchQuery });
+      this.setState({
+        searchQuery: nextProps.searchQuery,
+        previousSearchQuery: this.props.searchQuery
+      });
+
+      if (this.props.searchQuery != nextProps.searchQuery) {
+        this.setState({
+          inputValue: nextProps.searchQuery
+        });
+      }
     },
 
     render: function() {
