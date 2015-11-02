@@ -12,6 +12,7 @@ http://flickrfeed.msaspence.com
 
 ```
 git clone https://github.com/msaspence/flickrfeed.git
+cd flickrfeed
 npm install
 ```
 
