@@ -2,6 +2,10 @@
 
 Demonstration of Flickrs API using React
 
+## Demonstration
+
+http://flickrfeed.msaspence.com
+
 ## Usage
 
 ### Install
