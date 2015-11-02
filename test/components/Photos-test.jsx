@@ -42,7 +42,7 @@ describe('Photos', function() {
     it('is initially in a loading state until loaded', function () {
       render();
       expect(renderedDOM.getAttribute('class')).to.contain('loading');
-      feed.loading = false;
+      feed.loadingFirst = false;
       feed.trigger('update');
       expect(renderedDOM.getAttribute('class')).to.not.contain('loading');
     });

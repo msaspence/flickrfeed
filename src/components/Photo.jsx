@@ -1,6 +1,6 @@
 var React            = require('react'),
+    ReactDOM         = require('react-dom'),
     _                = require('lodash'),
-    Loading      = require('./Loading.jsx'),
     PhotoAuthor      = require('./PhotoAuthor.jsx'),
     PhotoDescription = require('./PhotoDescription.jsx'),
     PhotoImage       = require('./PhotoImage.jsx'),
@@ -10,23 +10,10 @@ var React            = require('react'),
 (function(React, _, module, undefined) {
   module.exports = React.createClass({
 
-    getInitialState: function() {
-      return {
-        loading: false
-      };
-    },
-
-    photoUpdated: function(photo) {
-      this.setState({
-        loading: false
-      });
-    },
-
     render: function() {
-      var classString = "photo thumbnail";
-      if (this.state.loading) classString = classString+" loading";
+      var classString = "photo thumbnail faded-out";
       return (
-        <div className={classString} data-id={this.props.photo.id}>
+        <div className={classString} ref='photo' data-id={this.props.photo.id}>
           <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner={this.props.photo.owner} size='n' />
           <div className="caption">
             <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
@@ -34,20 +21,15 @@ var React            = require('react'),
             <PhotoDescription key="description" description={this.props.photo.description} />
             <PhotoTags key="tags" tags={this.props.photo.tags} searchQuery={this.props.searchQuery} setSearchQuery={this.props.setSearchQuery} />
           </div>
-          <Loading spinner={this.spinnerOptions()} />
         </div>
       );
     },
 
-    spinnerOptions: function() {
-      return {
-        lines: 11,
-        length: 4,
-        width: 2,
-        radius: 5,
-        color: '#888',
-        position: 'absolute'
-      };
+    componentDidMount: function() {
+      var node = this.refs.photo;
+      setTimeout(function() {
+        node.setAttribute('class', node.getAttribute('class').replace('faded-out', ''));
+      },10);
     }
 
   });

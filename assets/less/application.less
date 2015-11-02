@@ -65,11 +65,12 @@
   }
 
   .loading-indicator {
-    opacity: 0;
+    opacity: 1;
     z-index: 1;
+    margin-top: 100px;
+    padding-bottom: 200px;
     .transition(~"opacity 0.3s");
-    position: absolute;
-    top: 250px;
+    position: relative;
     left: 50%;
     width: 68px;
     margin-left: -34px;
@@ -99,6 +100,13 @@
   .photo {
     height: 306px;
     position: relative;
+    opacity: 1;
+    .transition(~"opacity 0.3s");
+
+    &.faded-out {
+      opacity: 0;
+      .transition(~"opacity 0.3s");
+    }
 
     .image {
       display: block;

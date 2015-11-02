@@ -14,8 +14,11 @@ describe('Feed', function() {
   describe('#update', function () {
 
     it("set loading to true", function() {
+      feed.loadingFirst=false;
       feed.update();
       expect(feed.loading).to.be.true;
+      expect(feed.loadingFirst).to.be.false;
+      expect(feed.page).to.equal(1);
     });
 
     context("when search query is null", function() {
@@ -48,6 +51,21 @@ describe('Feed', function() {
       }));
     });
 
+    context("when search query is true", function() {
+      it("calls search", sinon.test(function() {
+        feed.searchQuery = "old search query";
+        feed.update(true);
+        expect(feed.searchQuery).to.equal("old search query");
+      }));
+    });
+
+    context("when page is provide", function() {
+      it("sets page", function() {
+        feed.update("my search query",2);
+        expect(feed.page).to.equal(2);
+      });
+    });
+
   });
 
   describe('#search', function() {
@@ -70,15 +88,33 @@ describe('Feed', function() {
 
   describe('#optionizeSearchQuery', function() {
     it("moves the string into an object", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({ text: "my search query", extras: 'tags,description,owner_name' });
+      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({
+        text: "my search query",
+        extras: 'tags,description,owner_name',
+        page: 1,
+        per_page: 18
+      });
     }));
 
     it("extracts tags", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({ text: "my search query", tags: "mytag:_withsymbols,hello", tag_mode: 'all', extras: 'tags,description,owner_name' });
+      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({
+        text: "my search query",
+        tags: "mytag:_withsymbols,hello",
+        tag_mode: 'all',
+        extras: 'tags,description,owner_name',
+        page: 1,
+        per_page: 18
+      });
     }));
 
     it("extracts owner", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({ text: "my search query", user_id: "ownerid", extras: 'tags,description,owner_name' });
+      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({
+        text: "my search query",
+        user_id: "ownerid",
+        extras: 'tags,description,owner_name',
+        page: 1,
+        per_page: 18
+      });
     }));
   });
 
@@ -87,7 +123,7 @@ describe('Feed', function() {
       callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
         .expects('getRecent')
-        .withArgs({ extras: 'tags,description,owner_name' }, feed.photosUpdated)
+        .withArgs({ extras: 'tags,description,owner_name', page: 1, per_page: 18 }, feed.photosUpdated)
         .once();
       feed.getRecent();
       mockFlickr.verify();
@@ -96,23 +132,25 @@ describe('Feed', function() {
 
   describe('#photosUpdated', function() {
 
-    var photos = { photos: { photo: [{a: 'b'}] } };
+    var photos = { photos: { photo: [{a: 'b'}], page: 1 } };
 
     it ("initiates photos", sinon.test(function() {
-      initiatedPhotos = { a: 'c' }
+      initiatedPhotos = [{ a: 'c' }]
       var mock = this.mock(feed)
         .expects('initiatePhotos')
         .withArgs([{a: 'b'}])
         .once()
-        .returns({ a: 'c' });
+        .returns([{ a: 'c' }]);
       feed.photosUpdated(null, photos);
       mock.verify();
       expect(feed.photos).to.deep.equal(initiatedPhotos);
     }));
 
     it("loading is set to false", function() {
+      feed.loadingFirst=true;
       feed.photosUpdated(null, photos);
       expect(feed.loading).to.be.false;
+      expect(feed.loadingFirst).to.be.false;
     });
 
     it("triggers update", function() {
@@ -122,9 +160,28 @@ describe('Feed', function() {
       expect(spy).to.have.been.called;
     });
 
+    context("when it is not the first page", function() {
+
+      var photos = { photos: { photo: [{a: 'b'}], page: 2 } };
+
+      it("concats the results on to the existing", sinon.test(function() {
+        initiatedPhotos = [{ a: 'c' }]
+        feed.photos = [{ b: 'd' }]
+        var mock = this.mock(feed)
+          .expects('initiatePhotos')
+          .withArgs([{a: 'b'}])
+          .once()
+          .returns({ a: 'c' });
+        feed.photosUpdated(null, photos);
+        mock.verify();
+        expect(feed.photos).to.deep.equal([{b: 'd'}, {a: 'c'}]);
+      }));
+
+    });
+
   });
 
-  describe('#subscribe()', function () {
+  describe('#subscribe', function () {
 
     it('adds a callback for the event once', function () {
       var my_callback = function() {};
@@ -136,7 +193,7 @@ describe('Feed', function() {
 
   });
 
-  describe('#trigger()', function () {
+  describe('#trigger', function () {
 
     it('calls each of the subscribed callbacks', function () {
       var my_callback = sinon.spy();
@@ -147,7 +204,27 @@ describe('Feed', function() {
 
   });
 
-  describe('#initiatePhotos()', function () {
+  describe('#getDefaultOptions', function() {
+
+    it("provides the default options", function() {
+      feed.page = null;
+      expect(feed.getDefaultOptions()).to.deep.equal({
+        extras: 'tags,description,owner_name',
+        page: 1,
+        per_page: 18
+      });
+    });
+
+    context("when page is set", function() {
+      it("provides the set value", function() {
+        feed.page = 3;
+        expect(feed.getDefaultOptions().page).to.equal(3);
+      });
+    });
+
+  });
+
+  describe('#initiatePhotos', function () {
 
     it('replaces each photo with a Photo and calls update on them', function () {
       result = feed.initiatePhotos([{id:0},{id:1},{id:2}])
@@ -155,12 +232,32 @@ describe('Feed', function() {
       [0,1,2].forEach(function(i) {
         expect(result[i]).to.be.an.instanceof(Photo);
         expect(result[i].id).to.equal(i);
-        // Expect result[i] to have recieved update()
-        // Not sure how to test for this but leaving
-        // comments for the sake of specification
       });
     });
 
   });
+
+  describe('#loadMore', function() {
+
+    it("calls update with the search query and the next page", sinon.test(function() {
+      feed.update = this.spy();
+      feed.loading = false;
+      feed.page = 2;
+      feed.loadMore();
+      expect(feed.update).to.have.been.calledWith(true, 3);
+    }));
+
+    context("when feed is already loading", function() {
+      it("calls update with the search query and the next page", sinon.test(function() {
+        feed.update = this.spy();
+        feed.loading = true;
+        feed.loadMore();
+        expect(feed.update).to.have.not.been.called;
+      }));
+    });
+
+  });
+
+
 
 });

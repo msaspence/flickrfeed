@@ -24,12 +24,12 @@ describe('Photo', function() {
     });
   });
 
-  describe('#render()', function () {
+  var render = function() {
+    photo = TestUtils.renderIntoDocument(<Photo photo={photoModel} />);
+    renderedDOM = ReactDOM.findDOMNode(photo)
+  }
 
-    var render = function() {
-      photo = TestUtils.renderIntoDocument(<Photo photo={photoModel} />);
-      renderedDOM = ReactDOM.findDOMNode(photo)
-    }
+  describe('#render', function () {
 
     it('renders a image', function () {
       render();
@@ -62,12 +62,15 @@ describe('Photo', function() {
       expect(description.textContent).to.equal('mytag');
     });
 
-    it('renders a loading spinner', function () {
-      render();
-      loading = renderedDOM.querySelector(".loading-indicator")
-      expect(loading.textContent).to.equal('Loading...');
-    });
+  });
 
+  describe('#componentDidMount', function () {
+    it("removes the faded-out class", function() {
+      render();
+      setTimeout(function() {
+        expect(photo.refs.photo.getAttribute('class')).to.not.contain('faded-out');
+      },20);
+    });
   });
 
 });

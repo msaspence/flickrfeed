@@ -11,20 +11,29 @@ var Photo = require('../models/Photo.js');
     this.photos = [];
     this.subscriptions = {};
     this.loading = true;
+    this.loadingFirst = true;
 
     this.flickr = new Flickr({
       api_key: "814f557fdd0320fb1fa4711047a5e355",
       progress: false
     });
 
-    this.update = function(searchQuery) {
-      var me = this;
+    this.update = function(searchQuery, page) {
+      if (page === undefined) page = 1;
+      this.page = page;
       this.loading = true;
+      if (searchQuery !== true) this.searchQuery = searchQuery;
 
-      if (searchQuery && searchQuery !== "") {
-        this.search(searchQuery);
+      if (this.searchQuery && this.searchQuery !== "") {
+        this.search(this.searchQuery);
       } else {
         this.getRecent();
+      }
+    };
+
+    this.loadMore = function() {
+      if (!this.loading) {
+        this.update(true, this.page+1);
       }
     };
 
@@ -32,8 +41,15 @@ var Photo = require('../models/Photo.js');
       this.flickr.photos.search(this.optionizeSearchQuery(searchQuery), this.photosUpdated);
     };
 
+    this.getDefaultOptions= function() {
+      return {
+        page: this.page || 1,
+        per_page: 18,
+        extras: 'tags,description,owner_name' };
+    };
+
     this.optionizeSearchQuery = function(searchQuery) {
-      r = { extras: 'tags,description,owner_name' };
+      r = this.getDefaultOptions();
       tags = searchQuery.match(/tag:([^ ]+)/g);
       if (tags) {
         searchQuery = searchQuery.replace(/tag:([^ ]+)/g, "");
@@ -51,22 +67,26 @@ var Photo = require('../models/Photo.js');
     };
 
     this.getRecent = function() {
-      this.flickr.photos.getRecent({ extras: 'tags,description,owner_name' }, this.photosUpdated);
+      this.flickr.photos.getRecent(this.getDefaultOptions(), this.photosUpdated);
     };
 
     this.photosUpdated = _.bind(function(err, result) {
       if(err) { throw new Error(err); }
-      this.photos = this.initiatePhotos(result.photos.photo);
+      if (result.photos.page == 1) {
+        this.photos = this.initiatePhotos(result.photos.photo);
+      } else {
+        this.photos = this.photos.concat(this.initiatePhotos(result.photos.photo));
+      }
       this.loading = false;
+      this.loadingFirst = false;
       this.trigger('update', this.photos);
     }, this);
 
 
     this.initiatePhotos = function(photos) {
-      var me = this;
+      var self = this;
       return photos.map(function(photo) {
-        var photoModel = new Photo(photo, me.flickr);
-        // photoModel.update();
+        var photoModel = new Photo(photo, self.flickr);
         return photoModel;
       });
     };

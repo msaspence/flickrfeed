@@ -91,4 +91,38 @@ describe('App', function() {
     });
   });
 
+  describe('#onScroll', function() {
+    
+    beforeEach(function() {
+      window.innerHeight = 1000;
+    });
+
+    context("we need some more photos", function() {
+      it("loads some more photos",  sinon.test(function() {
+        feed.loadMore = this.spy();
+        this.stub(Photos.prototype, "bottom").returns(123);
+        render();
+        expect(feed.loadMore).to.not.have.been.called;
+      }));
+    });
+
+    context("when don't need more photos", function() {
+      it("doesn't load any", sinon.test(function() {
+        this.stub(Photos.prototype, "bottom").returns(6123);
+        feed.loadMore = this.spy();
+        render();
+        expect(feed.loadMore).to.not.have.been.called;
+      }));
+    });
+  });
+
+  describe('#componentWillMount', function() {
+    it("subscribes to feed updates", sinon.test(function() {
+      feed.subscribe = this.spy();
+      render();
+      expect(feed.subscribe).to.have.been.calledWith('update')
+    }));
+  });
+
+
 });
