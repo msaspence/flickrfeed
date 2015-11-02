@@ -23,7 +23,7 @@ describe('PhotoImage', function() {
       render();
       expect(renderedDOM.getAttribute('href')).to.equal('https://www.flickr.com/photos/owner_id/my_photo_id');
       expect(renderedDOM.getAttribute('target')).to.equal('_blank');
-      expect(renderedDOM.querySelector('img').getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_my_photo_secret_m.jpg');
+      expect(renderedDOM.querySelector('img').getAttribute('data-src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_my_photo_secret_m.jpg');
     });
 
   });

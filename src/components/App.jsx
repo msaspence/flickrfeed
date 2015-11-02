@@ -1,11 +1,12 @@
 var React   = require('react'),
+    _       = require('lodash'),
     Header  = require('./Header.jsx'),
     Photos  = require('./Photos.jsx'),
     Feed    = require('../services/Feed.js'),
     History = require('react-router/lib/History');
 
 
-(function(React, module, undefined) {
+(function(React, _, module, undefined) {
 
   module.exports = React.createClass({
 
@@ -43,4 +44,4 @@ var React   = require('react'),
 
   });
 
-}(React, module));
+}(React, _, module));

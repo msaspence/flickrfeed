@@ -1,11 +1,12 @@
 var React    = require('react'),
+    Blazy    = require('blazy'),
     _        = require('lodash'),
     Loading  = require('./Loading.jsx'),
     Photo    = require('./Photo.jsx');
 
 window.photos = [];
 
-(function(React, _, module, undefined) {
+(function(React, _, Blazy, module, undefined) {
   module.exports = React.createClass({
 
     getInitialState: function() {
@@ -18,6 +19,17 @@ window.photos = [];
       if (this.props.feed) {
         this.props.feed.subscribe('update', _.bind(this.photosUpdated, this));
       }
+      this.blazy = new Blazy({
+        selector: '.blazy',
+        success: function(ele) {
+          p = ele.parentElement;
+          p.setAttribute('class', p.getAttribute('class').replace(/loading/, ""));
+        }
+      });
+    },
+
+    componentDidUpdate: function() {
+      this.blazy.revalidate();
     },
 
     photosUpdated: function() {
@@ -62,7 +74,8 @@ window.photos = [];
     spinnerOptions: function() {
       return {
         lines: 13,
-        lenght: 28,
+        length: 10,
+        speed: 1.5,
         scale: 0.5,
         radius: 15,
         color: '#888',
@@ -71,4 +84,4 @@ window.photos = [];
     }
 
   });
-}(React, _, module));
+}(React, _, Blazy, module));

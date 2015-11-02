@@ -1,4 +1,4 @@
-var React = require('react');
+var React    = require('react');
 
 (function(React, module, undefined) {
   module.exports = React.createClass({
@@ -10,8 +10,10 @@ var React = require('react');
       var href = "https://www.flickr.com/photos/"+this.props.owner+"/"+this.props.photo_id;
 
       return (
-        <a target="_blank" href={href} className="image">
-          <img src={src} />
+        <a target="_blank" href={href} className="image loading">
+          <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+               data-src={src}
+               className="blazy" />
         </a>
       );
     }

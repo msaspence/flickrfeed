@@ -33,7 +33,7 @@ describe('Photo', function() {
 
     it('renders a image', function () {
       render();
-      expect(renderedDOM.querySelector("img").getAttribute('src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_flickrsecret_n.jpg');
+      expect(renderedDOM.querySelector("img").getAttribute('data-src')).to.equal('https://farm1.staticflickr.com/server1/my_photo_id_flickrsecret_n.jpg');
     });
 
     it('renders the title', function () {
