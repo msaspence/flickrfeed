@@ -13,16 +13,16 @@ describe('App', function() {
       feed = new Feed();
 
 
-  var render = function() {
+  var render = function(params) {
     shallowRenderer = TestUtils.createRenderer();
 
     shallowRenderer.render(
-      <App params={params} feed={feed} />
+      <App params={params || {}} feed={feed} />
     );
     renderedDOM = shallowRenderer.getRenderOutput();
   };
 
-  describe('#render()', function () {
+  describe('#render', function () {
 
     it("renders application Header", function () {
       render();
@@ -34,33 +34,36 @@ describe('App', function() {
       expect(TestUtils.isElementOfType(renderedDOM.props.children[1], Photos)).to.be.true;
     });
 
+  });
+
+  describe('#componentWillReceiveProps', function () {
+
     context("when searchQuery has changed", function() {
 
-      params = { searchQuery: 'old search query'};
+      var params = { searchQuery: 'old search query'};
 
       it("updates the photo feed", sinon.test(function() {
+        render(params);
         var mock = this.mock(feed)
           .expects('update')
-          .twice();
-        render();
-        params.searchQuery = "new search query";
-        shallowRenderer._instance._instance.forceUpdate();
+          .once()
+          .withArgs("new search query");
+        shallowRenderer._instance._instance.componentWillReceiveProps({ params: { searchQuery: "new search query" } });
         mock.verify();
       }));
 
     });
 
     context("when searchQuery has changed", function() {
-      params = { searchQuery: 'same search query'};
+      var params = { searchQuery: 'same search query'};
 
       it("doesn't update the photo feed", sinon.test(function() {
-        render();
+        render(params);
         var mock = this.mock(feed)
           .expects('update')
           .never();
         params.searchQuery = "same search query";
-        shallowRenderer._instance._instance.componentWillReceiveProps({});
-        shallowRenderer._instance._instance.forceUpdate();
+        shallowRenderer._instance._instance.componentWillReceiveProps({ params: { searchQuery: "same search query" } });
         mock.verify();
       }));
     });

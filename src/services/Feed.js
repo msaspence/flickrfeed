@@ -12,6 +12,7 @@ var Photo = require('../models/Photo.js');
     this.subscriptions = {};
     this.loading = true;
     this.loadingFirst = true;
+    this.searchId = 0;
 
     this.flickr = new Flickr({
       api_key: "6fd39196ea7e93c54cd69b4b607b06d5",
@@ -22,7 +23,12 @@ var Photo = require('../models/Photo.js');
       if (page === undefined) page = 1;
       this.page = page;
       this.loading = true;
-      if (searchQuery !== true) this.searchQuery = searchQuery;
+      if (searchQuery !== true && searchQuery != this.searchQuery) {
+        this.searchId = this.searchId + 1;
+        this.loadingFirst = true;
+        this.searchQuery = searchQuery;
+        this.photos = [];
+      }
 
       if (this.searchQuery && this.searchQuery !== "") {
         this.search(this.searchQuery);
@@ -38,7 +44,13 @@ var Photo = require('../models/Photo.js');
     };
 
     this.search = function(searchQuery) {
-      this.flickr.photos.search(this.optionizeSearchQuery(searchQuery), this.photosUpdated);
+      var self = this;
+      var searchId = this.searchId;
+      this.flickr.photos.search(this.optionizeSearchQuery(searchQuery), function(err, result) {
+        if (searchId == self.searchId) {
+          self.photosUpdated(err, result);
+        }
+      });
     };
 
     this.getDefaultOptions= function() {
@@ -67,7 +79,13 @@ var Photo = require('../models/Photo.js');
     };
 
     this.getRecent = function() {
-      this.flickr.photos.getRecent(this.getDefaultOptions(), this.photosUpdated);
+      var self = this;
+      var searchId = this.searchId;
+      this.flickr.photos.getRecent(this.getDefaultOptions(), function(err, result) {
+        if (searchId == self.searchId) {
+          self.photosUpdated(err, result);
+        }
+      });
     };
 
     this.photosUpdated = _.bind(function(err, result) {
@@ -107,6 +125,11 @@ var Photo = require('../models/Photo.js');
         }, this);
       }
     };
+
+    this.clear = function() {
+      this.photos = [];
+      this.trigger('update');
+    }
 
   };
   module.exports = Feed;

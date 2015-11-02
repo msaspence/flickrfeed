@@ -70,17 +70,16 @@ describe('Feed', function() {
 
   describe('#search', function() {
     it("calls the Flickr API search", sinon.test(function() {
-      callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
         .expects('search')
-        .withArgs({ text: 'my search query', extras: 'tags,description,owner_name' }, feed.photosUpdated)
+        .withArgs({ text: 'my search query', extras: 'tags,description,owner_name' })
         .once();
       var mock = this.mock(feed)
         .expects('optionizeSearchQuery')
         .withArgs('my search query')
         .once()
         .returns({ text: 'my search query', extras: 'tags,description,owner_name' });
-      feed.search('my search query', callback);
+      feed.search('my search query');
       mock.verify();
       mockFlickr.verify();
     }));
@@ -123,7 +122,7 @@ describe('Feed', function() {
       callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
         .expects('getRecent')
-        .withArgs({ extras: 'tags,description,owner_name', page: 1, per_page: 18 }, feed.photosUpdated)
+        .withArgs({ extras: 'tags,description,owner_name', page: 1, per_page: 18 })
         .once();
       feed.getRecent();
       mockFlickr.verify();

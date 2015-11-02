@@ -10,18 +10,6 @@ window.photos = [];
 (function(React, ReactDOM, _, Blazy, module, undefined) {
   module.exports = React.createClass({
 
-    getInitialState: function() {
-      return {
-        photos: (this.props.feed && this.props.feed.photos) || []
-      };
-    },
-
-    componentWillMount: function() {
-      if (this.props.feed) {
-        this.props.feed.subscribe('update', _.bind(this.photosUpdated, this));
-      }
-    },
-
     componentDidMount: function() {
       this.blazy = new Blazy({
         selector: '.blazy',
@@ -37,21 +25,16 @@ window.photos = [];
       this.blazy.revalidate();
     },
 
-    photosUpdated: function() {
-      this.setState({
-        photos: this.props.feed.photos
-      });
-    },
-
     render: function() {
       var photos;
 
-      classString = this.props.feed.loadingFirst ? "photos loading" : "photos";
+      classString = this.props.loading ? "photos loading" : "photos";
       var self = this;
-      if(this.state.photos.length > 0) {
+
+      if(this.props.photos && this.props.photos.length > 0) {
         photos = (
           <div className="row">
-            {this.state.photos.map(function (photo, j) {
+            {this.props.photos.map(function (photo, j) {
               return (
                 <div className="col-sm-3 col-md-2" key={j}>
                   <Photo photo={photo} key={photo.id} searchQuery={self.props.searchQuery} setSearchQuery={self.props.setSearchQuery} />
@@ -60,8 +43,10 @@ window.photos = [];
             })}
           </div>
         );
-      } else {
+      } else if (!this.props.loading) {
         photos = <div className="empty"><p>There are no photos to see here!</p></div>;
+      } else {
+        photos = null;
       }
 
       return (

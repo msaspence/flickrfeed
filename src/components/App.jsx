@@ -26,6 +26,9 @@ var React    = require('react'),
 
     componentWillReceiveProps: function (nextProps) {
       this.setState({ previousSearchQuery: this.props.params.searchQuery });
+      if (nextProps.params.searchQuery != this.props.params.searchQuery) {
+        this.props.feed.update(nextProps.params.searchQuery);
+      }
     },
 
     setSearchQuery: function(searchQuery) {
@@ -34,35 +37,39 @@ var React    = require('react'),
 
     componentWillMount: function() {
       if (this.props.feed) {
-        // If we've just loaded some photos in we
-        // don't want to wait for the next scroll
-        // event if another batch is required
-        this.props.feed.subscribe('update', _.bind(this.onScroll, this));
+        this.props.feed.subscribe('update', _.bind(this.photosUpdated, this));
+        this.props.feed.update(this.props.params.searchQuery);
       }
     },
 
     render: function() {
-      if (this.state.previousSearchQuery !== this.props.params.searchQuery) {
-        this.props.feed.update(this.props.params.searchQuery);
-      }
       return (
         <div className="container">
           <Header text="Flickr Photo Stream"
                   searchQuery={this.props.params.searchQuery}
                   setSearchQuery={this.setSearchQuery} />
-          <Photos feed={this.props.feed}
-                  searchQuery={this.props.params.searchQuery}
+          <Photos searchQuery={this.props.params.searchQuery}
                   setSearchQuery={this.setSearchQuery}
+                  photos={this.props.feed.photos}
+                  loading={this.props.feed.loadingFirst}
                   ref='photos' />
         </div>
       );
+    },
+
+    photosUpdated: function() {
+      this.forceUpdate();
+      this.onScroll();
     },
 
     onScroll: function(event) {
       if (this.refs.photos) {
         bottom = this.refs.photos.bottom();
         if (bottom-5000 < window.innerHeight) {
-          this.props.feed.loadMore();
+          var self = this;
+          // setTimeout(function() {
+            self.props.feed.loadMore();
+          // },1000);
         }
       }
     }
