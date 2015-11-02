@@ -55,6 +55,8 @@ gulp test -t path/to/test
  * Flux - Look at implementing Flux rather than passing searchQuery and setSearchQuery down the tree
  * Continous Integration - automated cross browser testing with Testling
  * Use Reach's shouldComponentUpdate to improve performance
+ * Protect my Flickr API key
+ * Work out asyncronous gulp order and dependencies
 
 
 ### Features
