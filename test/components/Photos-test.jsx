@@ -59,7 +59,8 @@ describe('Photos', function() {
       it('renders empty message', function () {
         photos = [];
         render(photos, false);
-        expect(renderedDOM.querySelector(".empty p").textContent).to.equal("There are no photos to see here!");
+        expect(renderedDOM.getAttribute("class")).to.contain("no-results");
+        expect(renderedDOM.querySelector(".empty p").textContent).to.equal("We couldn't find any photos to match your search!");
       });
     });
 

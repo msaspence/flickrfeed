@@ -54,6 +54,18 @@
 }
 
 .photos {
+  .empty {
+    font-size: 30px;
+    height: 0;
+    float: left;
+  }
+
+  &.no-results {
+    .loading-indicator {
+      opacity: 0;
+    }
+  }
+
   .index {
     z-index: 2;
     position: relative;
@@ -68,7 +80,7 @@
   .loading-indicator {
     opacity: 1;
     z-index: 1;
-    margin-top: 100px;
+    padding-top: 100px;
     padding-bottom: 200px;
     .transition(~"opacity 0.3s");
     position: relative;
@@ -173,7 +185,6 @@
       .transition(~"opacity 0.3s");
     }
 
-    
   }
 }
 

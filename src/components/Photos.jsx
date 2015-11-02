@@ -44,7 +44,8 @@ window.photos = [];
           </div>
         );
       } else if (!this.props.loading) {
-        photos = <div className="empty"><p>There are no photos to see here!</p></div>;
+        photos = <div className="empty"><p>We couldn't find any photos to match your search!</p></div>;
+        classString = classString + " no-results";
       } else {
         photos = null;
       }
