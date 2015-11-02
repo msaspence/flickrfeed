@@ -7,7 +7,7 @@ var React = require('react');
       var src = "https://farm"+this.props.farm+".staticflickr.com/"+this.props.server+"/"+this.props.photo_id+"_"+this.props.photo_secret;
       if(this.props.size) src = src + "_" + this.props.size;
       src = src+".jpg";
-      var href = "https://www.flickr.com/photos/"+this.props.owner_id+"/"+this.props.photo_id;
+      var href = "https://www.flickr.com/photos/"+this.props.owner+"/"+this.props.photo_id;
 
       return (
         <a target="_blank" href={href} className="image">

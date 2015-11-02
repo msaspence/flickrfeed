@@ -4,10 +4,7 @@ var PhotoTags = require('../../src/components/PhotoTags.jsx');
 describe('PhotoTags', function() {
 
   var photoTag,
-      tags = [
-        { tag: "mytag", raw: "My Tag" },
-        { tag: "mytag2", raw: "My Second Tag" }
-      ]
+      tags = ["mytag","mytag2"];
 
 
   describe('#render()', function () {
@@ -21,9 +18,9 @@ describe('PhotoTags', function() {
       render();
       tags = renderedDOM.querySelectorAll('.tag');
       expect(tags[0].getAttribute('href')).to.equal('https://www.flickr.com/search/?tags=mytag');
-      expect(tags[0].textContent).to.equal('My Tag');
+      expect(tags[0].textContent).to.equal('mytag');
       expect(tags[1].getAttribute('href')).to.equal('https://www.flickr.com/search/?tags=mytag2');
-      expect(tags[1].textContent).to.equal('My Second Tag');
+      expect(tags[1].textContent).to.equal('mytag2');
     });
 
   });

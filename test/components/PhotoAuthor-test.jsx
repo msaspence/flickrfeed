@@ -4,11 +4,11 @@ var PhotoAuthor = require('../../src/components/PhotoAuthor.jsx');
 describe('PhotoAuthor', function() {
 
   var photoAuthor,
-      owner_id = 'owner_id',
-      owner = "Owner String";
+      owner = 'owner_id',
+      owner_name = "Owner String";
 
   var render = function(spy) {
-    photoAuthor = TestUtils.renderIntoDocument(<PhotoAuthor owner={owner} owner_id={owner_id} setSearchQuery={spy} />);
+    photoAuthor = TestUtils.renderIntoDocument(<PhotoAuthor owner={owner} owner_name={owner_name} setSearchQuery={spy} />);
     renderedDOM = ReactDOM.findDOMNode(photoAuthor)
   }
 

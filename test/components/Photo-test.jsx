@@ -15,13 +15,10 @@ describe('Photo', function() {
       isfamily: 0,
       isfriend: 0,
       ispublic: 1,
-      description: "My photo's description",
-      tags: [
-        { tag: "mytag", raw: "My Tag" },
-        { tag: "mytag2", raw: "My Second Tag" }
-      ],
+      description: { _content: "My photo's description" },
+      tags: "mytag mytag2",
       owner: "owner_id",
-      owner_display: "Owner String",
+      ownername : "Owner String",
       secret: "flickrsecret",
       server: "server1"
     });
@@ -33,13 +30,6 @@ describe('Photo', function() {
       photo = TestUtils.renderIntoDocument(<Photo photo={photoModel} />);
       renderedDOM = ReactDOM.findDOMNode(photo)
     }
-
-    it('is initially in a loading state until loaded', function () {
-      render();
-      expect(renderedDOM.getAttribute('class')).to.contain('loading');
-      photoModel.trigger();
-      expect(renderedDOM.getAttribute('class')).to.not.contain('loading');
-    });
 
     it('renders a image', function () {
       render();
@@ -55,7 +45,6 @@ describe('Photo', function() {
 
     it('renders the author', function () {
       render();
-      photoModel.trigger();
       authorLink = renderedDOM.querySelector(".author a")
       expect(authorLink.textContent).to.equal('Owner String');
       expect(authorLink.getAttribute('href')).to.equal('https://www.flickr.com/people/owner_id');
@@ -63,21 +52,18 @@ describe('Photo', function() {
 
     it('renders the description', function () {
       render();
-      photoModel.trigger();
       description = renderedDOM.querySelector(".description")
       expect(description.textContent).to.equal('My photo\'s description');
     });
 
     it('renders the tags', function () {
       render();
-      photoModel.trigger();
       description = renderedDOM.querySelector(".tag")
-      expect(description.textContent).to.equal('My Tag');
+      expect(description.textContent).to.equal('mytag');
     });
 
     it('renders a loading spinner', function () {
       render();
-      photoModel.trigger();
       loading = renderedDOM.querySelector(".loading-indicator")
       expect(loading.textContent).to.equal('Loading...');
     });

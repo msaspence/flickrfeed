@@ -55,13 +55,13 @@ describe('Feed', function() {
       callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
         .expects('search')
-        .withArgs({ text: 'my search query' }, feed.photosUpdated)
+        .withArgs({ text: 'my search query', extras: 'tags,description,owner_name' }, feed.photosUpdated)
         .once();
       var mock = this.mock(feed)
         .expects('optionizeSearchQuery')
         .withArgs('my search query')
         .once()
-        .returns({ text: 'my search query' });
+        .returns({ text: 'my search query', extras: 'tags,description,owner_name' });
       feed.search('my search query', callback);
       mock.verify();
       mockFlickr.verify();
@@ -70,15 +70,15 @@ describe('Feed', function() {
 
   describe('#optionizeSearchQuery', function() {
     it("moves the string into an object", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({ text: "my search query" });
+      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({ text: "my search query", extras: 'tags,description,owner_name' });
     }));
 
     it("extracts tags", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({ text: "my search query", tags: "mytag:_withsymbols,hello", tag_mode: 'all' });
+      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({ text: "my search query", tags: "mytag:_withsymbols,hello", tag_mode: 'all', extras: 'tags,description,owner_name' });
     }));
 
     it("extracts owner", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({ text: "my search query", user_id: "ownerid" });
+      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({ text: "my search query", user_id: "ownerid", extras: 'tags,description,owner_name' });
     }));
   });
 
@@ -87,7 +87,7 @@ describe('Feed', function() {
       callback = sinon.spy();
       var mockFlickr = this.mock(feed.flickr.photos)
         .expects('getRecent')
-        .withArgs({}, feed.photosUpdated)
+        .withArgs({ extras: 'tags,description,owner_name' }, feed.photosUpdated)
         .once();
       feed.getRecent();
       mockFlickr.verify();

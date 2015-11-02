@@ -9,13 +9,13 @@ describe('PhotoImage', function() {
       photo_id = 'my_photo_id',
       photo_secret = 'my_photo_secret',
       size = 'm',
-      owner_id = 'owner_id';
+      owner = 'owner_id';
 
 
   describe('#render()', function () {
 
     var render = function() {
-      photo = TestUtils.renderIntoDocument(<PhotoImage farm={farm} server={server} photo_id={photo_id} photo_secret={photo_secret} owner_id={owner_id} size={size} />);
+      photo = TestUtils.renderIntoDocument(<PhotoImage farm={farm} server={server} photo_id={photo_id} photo_secret={photo_secret} owner={owner} size={size} />);
       renderedDOM = ReactDOM.findDOMNode(photo)
     }
 

@@ -12,12 +12,8 @@ var React            = require('react'),
 
     getInitialState: function() {
       return {
-        loading: true
+        loading: false
       };
-    },
-
-    componentDidMount: function() {
-      this.props.photo.subscribe(this.photoUpdated);
     },
 
     photoUpdated: function(photo) {
@@ -31,10 +27,10 @@ var React            = require('react'),
       if (this.state.loading) classString = classString+" loading";
       return (
         <div className={classString} data-id={this.props.photo.id}>
-          <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner_id={this.props.photo.owner} size='n' />
+          <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner={this.props.photo.owner} size='n' />
           <div className="caption">
             <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
-            <PhotoAuthor key="author" owner_id={this.props.photo.owner} owner={this.props.photo.owner_display} setSearchQuery={this.props.setSearchQuery} />
+            <PhotoAuthor key="author" owner={this.props.photo.owner} owner_name={this.props.photo.ownername} setSearchQuery={this.props.setSearchQuery} />
             <PhotoDescription key="description" description={this.props.photo.description} />
             <PhotoTags key="tags" tags={this.props.photo.tags} searchQuery={this.props.searchQuery} setSearchQuery={this.props.setSearchQuery} />
           </div>

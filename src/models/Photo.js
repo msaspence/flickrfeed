@@ -7,35 +7,8 @@ var _ = require('lodash');
     _.extend(this, data);
     this.subscriptions = [];
     this.flickr = flickr;
-
-    this.update = function() {
-      if (this.flickr) {
-        this.flickr = flickr;
-
-        var me = this;
-
-        flickr.photos.getInfo({ photo_id: data.id }, function(err, data) {
-          if (data) {
-            me.description = data.photo.description._content;
-            me.owner_display = data.photo.owner.username;
-            me.tags = data.photo.tags.tag.map(function(tag) {
-              return { tag: tag._content, raw: tag.raw };
-            });
-            me.trigger();
-          }
-        });
-      }
-    };
-
-    this.subscribe = function(func) {
-      if (this.subscriptions.indexOf(func) == -1) {
-        this.subscriptions.push(func);
-      }
-    };
-
-    this.trigger = function() {
-      this.subscriptions.forEach(function(subscription) { subscription.apply(); });
-    };
+    if (this.tags) this.tags = this.tags.split(' ');
+    if (this.description) this.description = this.description._content;
 
   };
 

@@ -12,7 +12,7 @@ var React = require('react');
         labelColor = 'label-default';
       }
       return (
-        <a href={href} ref='tag' onClick={this.onClick} target='_blank' className={'tag label '+labelColor}>{this.props.raw}</a>
+        <a href={href} ref='tag' onClick={this.onClick} target='_blank' className={'tag label '+labelColor}>{this.props.tag}</a>
       );
     },
 

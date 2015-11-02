@@ -33,7 +33,7 @@ var Photo = require('../models/Photo.js');
     };
 
     this.optionizeSearchQuery = function(searchQuery) {
-      r = {};
+      r = { extras: 'tags,description,owner_name' };
       tags = searchQuery.match(/tag:([^ ]+)/g);
       if (tags) {
         searchQuery = searchQuery.replace(/tag:([^ ]+)/g, "");
@@ -51,7 +51,7 @@ var Photo = require('../models/Photo.js');
     };
 
     this.getRecent = function() {
-      this.flickr.photos.getRecent({}, this.photosUpdated);
+      this.flickr.photos.getRecent({ extras: 'tags,description,owner_name' }, this.photosUpdated);
     };
 
     this.photosUpdated = _.bind(function(err, result) {
@@ -66,7 +66,7 @@ var Photo = require('../models/Photo.js');
       var me = this;
       return photos.map(function(photo) {
         var photoModel = new Photo(photo, me.flickr);
-        photoModel.update();
+        // photoModel.update();
         return photoModel;
       });
     };
