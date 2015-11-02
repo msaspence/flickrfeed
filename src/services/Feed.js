@@ -14,7 +14,7 @@ var Photo = require('../models/Photo.js');
     this.loadingFirst = true;
 
     this.flickr = new Flickr({
-      api_key: "814f557fdd0320fb1fa4711047a5e355",
+      api_key: "6fd39196ea7e93c54cd69b4b607b06d5",
       progress: false
     });
 
