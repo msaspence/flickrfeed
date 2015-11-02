@@ -49,19 +49,17 @@ window.photos = [];
       classString = this.props.feed.loadingFirst ? "photos loading" : "photos";
       var self = this;
       if(this.state.photos.length > 0) {
-        photos = _.chunk(this.state.photos, 6).map(function(row, i) {
-          return (
-            <div className="row" key={i}>
-              {row.map(function (photo, j) {
-                return (
-                  <div className="col-sm-3 col-md-2" key={j}>
-                    <Photo photo={photo} key={photo.id} searchQuery={self.props.searchQuery} setSearchQuery={self.props.setSearchQuery} />
-                  </div>
-                );
-              })}
-            </div>
-          );
-        });
+        photos = (
+          <div className="row">
+            {this.state.photos.map(function (photo, j) {
+              return (
+                <div className="col-sm-3 col-md-2" key={j}>
+                  <Photo photo={photo} key={photo.id} searchQuery={self.props.searchQuery} setSearchQuery={self.props.setSearchQuery} />
+                </div>
+              );
+            })}
+          </div>
+        );
       } else {
         photos = <div className="empty"><p>There are no photos to see here!</p></div>;
       }

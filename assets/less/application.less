@@ -2,6 +2,7 @@
 
 @grid-gutter-width: 10px;
 
+
 .page-header {
   .clearfix;
   margin-top: 0px;
@@ -111,7 +112,7 @@
     .image {
       display: block;
       height: 120px;
-      width: 170px;
+      width: 100%;
       overflow: hidden;
       background: #ddd;
 
@@ -173,5 +174,41 @@
     }
 
     
+  }
+}
+
+@media (max-width: 770px) {
+  .page-header {
+
+    h1 {
+      font-size: 30px;
+      line-height: 30px;
+      margin-bottom: 0;
+    }
+    .search {
+      position: relative;
+      float: none !important;
+      margin-right: 0;
+      width: auto;
+      height: 30px;
+      input[type=search] {
+        position: absolute;
+        left: 0;
+        right: 40px;
+        width: 100%;
+      }
+      .clear {
+        right: 73px;
+        left: auto;
+      }
+      button {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+
+  .photos .photo .image img {
+    width: 100%;
   }
 }
