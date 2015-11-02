@@ -67,7 +67,6 @@ gulp test -t path/to/test
 
  * Large in app views of pictures rather than linking to Flickr
  * Scalable infinite scroll that removes previously view photos from the DOM
- * Don't highlight tags until the photos for that search have loaded
  * Better responsive styles for mobile
  * Cache results
 
