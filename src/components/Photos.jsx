@@ -25,6 +25,7 @@ window.photos = [];
     componentDidMount: function() {
       this.blazy = new Blazy({
         selector: '.blazy',
+        offset: 1000,
         success: function(ele) {
           p = ele.parentElement;
           p.setAttribute('class', p.getAttribute('class').replace(/loading/, ""));
