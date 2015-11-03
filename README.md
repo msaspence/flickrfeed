@@ -52,6 +52,7 @@ gulp test -t path/to/test
     * photos are loaded in batches of 18
     * the next 6 batches following the one one screen are prefetched
     * actual image files are lazy loaded if the photo is within 1000px of the visible screen
+  * URLs - The application must be mounted at the root of the domain
 
 ## What next
 
@@ -70,4 +71,3 @@ gulp test -t path/to/test
  * Scalable infinite scroll that removes previously view photos from the DOM
  * Better responsive styles for mobile
  * Cache results
-
