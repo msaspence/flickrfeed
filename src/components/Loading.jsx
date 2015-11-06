@@ -2,8 +2,10 @@ var React      = require('react'),
     ReactDOM   = require('react-dom'),
     Spinner    = require('spin');
 
-(function(React, module, undefined) {
+(function(React, ReactDOM, Spinner, module, undefined) {
   module.exports = React.createClass({
+
+    // Configuration
 
     getDefaultProps: function() {
       return {
@@ -12,6 +14,8 @@ var React      = require('react'),
         }
       };
     },
+
+    // Lifecycle
 
     render: function() {
       return (
@@ -22,13 +26,13 @@ var React      = require('react'),
     },
 
     componentDidMount: function() {
+      // Add a Spin.js spinner
       this.spinner = new Spinner(this.props.spinner);
       var target = ReactDOM.findDOMNode(this);
-
-      // clear out any other spinners from previous renders
       this.spinner.spin();
       target.insertBefore(this.spinner.el, target.firstChild);
     }
 
   });
-}(React, module));
+
+}(React, ReactDOM, Spinner, module));

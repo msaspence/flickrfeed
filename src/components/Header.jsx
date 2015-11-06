@@ -2,8 +2,10 @@ var React  = require('react'),
     Link   = require('react-router/lib/Link');
     Search = require('./Search.jsx');
 
-(function(React, module, undefined) {
+(function(React, Link, Search, module, undefined) {
   module.exports = React.createClass({
+
+    // Lifecycle
 
     render: function() {
       return (
@@ -15,4 +17,4 @@ var React  = require('react'),
     }
 
   });
-}(React, module));
+}(React, Link, Search, module));

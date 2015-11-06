@@ -8,14 +8,19 @@ var React    = require('react'),
     History  = require('react-router/lib/History');
 
 
-(function(React, ReactDOM, _, module, undefined) {
+(function(React, ReactDOM, _, Header, Photos, Feed, OnScroll, History, module, undefined) {
 
   module.exports = React.createClass({
 
-    mixins: [ History, OnScroll],
+    mixins: [ History, OnScroll ],
+
+    // Application State
 
     getInitialState: function() {
-      return { previousSearchQuery: null };
+      return {
+        previousSearchQuery: null,
+        searchQuery: null
+      };
     },
 
     getDefaultProps: function() {
@@ -24,15 +29,15 @@ var React    = require('react'),
       };
     },
 
+    // Lifecycle
+
     componentWillReceiveProps: function (nextProps) {
-      this.setState({ previousSearchQuery: this.props.params.searchQuery });
+      this.setState({
+        previousSearchQuery: this.props.params.searchQuery
+      });
       if (nextProps.params.searchQuery != this.props.params.searchQuery) {
         this.props.feed.update(nextProps.params.searchQuery);
       }
-    },
-
-    setSearchQuery: function(searchQuery) {
-      this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
     },
 
     componentWillMount: function() {
@@ -44,7 +49,7 @@ var React    = require('react'),
 
     render: function() {
       if (this.state.previousSearchQuery != this.props.params.searchQuery) {
-        searchQuery = this.props.params.searchQuery
+        searchQuery = this.props.params.searchQuery;
       } else {
         searchQuery = undefined;
       }
@@ -62,9 +67,17 @@ var React    = require('react'),
       );
     },
 
+    // Callbacks
+
     photosUpdated: function() {
       this.forceUpdate();
       this.onScroll();
+    },
+
+    // Events
+
+    setSearchQuery: function(searchQuery) {
+      this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
     },
 
     onScroll: function(event) {
@@ -79,4 +92,4 @@ var React    = require('react'),
 
   });
 
-}(React, ReactDOM, _, module));
+}(React, ReactDOM, _, Header, Photos, Feed, OnScroll, History, module));

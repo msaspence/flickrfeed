@@ -7,8 +7,37 @@ var React    = require('react'),
 
 window.photos = [];
 
-(function(React, ReactDOM, _, Blazy, module, undefined) {
+(function(React, ReactDOM, _, Blazy, Loading, Photo, module, undefined) {
   module.exports = React.createClass({
+
+    // Configuration
+
+    spinnerOptions: function() {
+      return {
+        lines: 13,
+        length: 10,
+        speed: 1.5,
+        scale: 0.5,
+        radius: 15,
+        color: '#888',
+        position: 'absolute'
+      };
+    },
+
+    // Lifecycle
+
+    render: function() {
+      var self = this;
+
+      return (
+        <section className={this.className()}>
+          <div className="index">
+            {this.photosHTML()}
+          </div>
+          <Loading spinner={this.spinnerOptions()} />
+        </section>
+      );
+    },
 
     componentDidMount: function() {
       this.blazy = new Blazy({
@@ -25,14 +54,12 @@ window.photos = [];
       this.blazy.revalidate();
     },
 
-    render: function() {
-      var photos;
+    // Derivers
 
-      classString = this.props.loading ? "photos loading" : "photos";
+    photosHTML: function() {
       var self = this;
-
-      if(this.props.photos && this.props.photos.length > 0) {
-        photos = (
+      if (this.hasPhotos()) {
+        return (
           <div className="row">
             {this.props.photos.map(function (photo, j) {
               return (
@@ -44,37 +71,33 @@ window.photos = [];
           </div>
         );
       } else if (!this.props.loading) {
-        photos = <div className="empty"><p>We couldn't find any photos to match your search!</p></div>;
-        classString = classString + " no-results";
-      } else {
-        photos = null;
+        return (<div className="empty">
+          <p>
+            We couldn&apos;t find any photos to match your search!
+          </p>
+        </div>);
       }
-
-      return (
-        <section className={classString}>
-          <div className="index">
-            {photos}
-          </div>
-          <Loading spinner={this.spinnerOptions()} />
-        </section>
-      );
     },
 
-    spinnerOptions: function() {
-      return {
-        lines: 13,
-        length: 10,
-        speed: 1.5,
-        scale: 0.5,
-        radius: 15,
-        color: '#888',
-        position: 'absolute'
-      };
+    className: function() {
+      var r = "photos";
+      if (this.props.loading) {
+        r += " loading";
+      } else if (!this.hasPhotos()) {
+        r += " no-results";
+      }
+      return r;
     },
+
+    hasPhotos: function() {
+      return this.props.photos && this.props.photos.length > 0;
+    },
+
+    // Parents call
 
     bottom: function() {
       return ReactDOM.findDOMNode(this).getBoundingClientRect().bottom;
     }
 
   });
-}(React, ReactDOM, _, Blazy, module));
+}(React, ReactDOM, _, Blazy, Loading, Photo, module));

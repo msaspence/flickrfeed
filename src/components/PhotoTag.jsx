@@ -3,6 +3,8 @@ var React = require('react');
 (function(React, module, undefined) {
   module.exports = React.createClass({
 
+    // Lifecycle
+
     render: function() {
       var href = 'https://www.flickr.com/search/?tags='+this.props.tag;
       var labelColor;
@@ -15,6 +17,8 @@ var React = require('react');
         <a href={href} ref='tag' onClick={this.onClick} target='_blank' className={'tag label '+labelColor}>{this.props.tag}</a>
       );
     },
+
+    // Events
 
     onClick: function(event) {
       event.preventDefault();

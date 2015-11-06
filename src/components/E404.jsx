@@ -3,6 +3,8 @@ var React = require('react');
 (function(React, module, undefined) {
   module.exports = React.createClass({
 
+    // Lifecycle
+
     render: function() {
       return (
         <div className="container">

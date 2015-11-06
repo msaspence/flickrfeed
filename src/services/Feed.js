@@ -1,10 +1,9 @@
 require("flickrapi/browser/flickrapi.js");
 
-var _ = require('lodash');
+var _     = require('lodash'),
+    Photo = require('../models/Photo.js');
 
-var Photo = require('../models/Photo.js');
-
-(function(Flickr, _, module) {
+(function(Flickr, _, Photo, module, undefined) {
 
   var Feed = function() {
 
@@ -23,6 +22,7 @@ var Photo = require('../models/Photo.js');
       if (page === undefined) page = 1;
       this.page = page;
       this.loading = true;
+
       if (searchQuery !== true && searchQuery != this.searchQuery) {
         this.searchId = this.searchId + 1;
         this.loadingFirst = true;
@@ -45,6 +45,9 @@ var Photo = require('../models/Photo.js');
 
     this.search = function(searchQuery) {
       var self = this;
+      // We use a searchId that increments with each search.
+      // This insures that if we change the search query
+      // before a Flickr request responds, we know not to use it.
       var searchId = this.searchId;
       this.flickr.photos.search(this.optionizeSearchQuery(searchQuery), function(err, result) {
         if (searchId == self.searchId) {
@@ -53,7 +56,7 @@ var Photo = require('../models/Photo.js');
       });
     };
 
-    this.getDefaultOptions= function() {
+    this.getDefaultOptions = function() {
       return {
         page: this.page || 1,
         per_page: 18,
@@ -88,12 +91,18 @@ var Photo = require('../models/Photo.js');
       });
     };
 
+    this.clear = function() {
+      this.photos = [];
+      this.trigger('update');
+    };
+
     this.photosUpdated = _.bind(function(err, result) {
       if(err) { throw new Error(err); }
+      var photos = this.initiatePhotos(result.photos.photo);
       if (result.photos.page == 1) {
-        this.photos = this.initiatePhotos(result.photos.photo);
+        this.photos = photos;
       } else {
-        this.photos = this.photos.concat(this.initiatePhotos(result.photos.photo));
+        this.photos = this.photos.concat(photos);
       }
       this.loading = false;
       this.loadingFirst = false;
@@ -126,11 +135,6 @@ var Photo = require('../models/Photo.js');
       }
     };
 
-    this.clear = function() {
-      this.photos = [];
-      this.trigger('update');
-    }
-
   };
   module.exports = Feed;
-}(window.Flickr, _, module));
+}(window.Flickr, _, Photo, module, undefined));

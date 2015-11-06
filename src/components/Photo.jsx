@@ -7,13 +7,14 @@ var React            = require('react'),
     PhotoTags        = require('./PhotoTags.jsx');
     PhotoTitle       = require('./PhotoTitle.jsx');
 
-(function(React, _, module, undefined) {
+(function(React, ReactDOM, _, PhotoAuthor, PhotoDescription, PhotoImage, PhotoTags, PhotoTitle, module, undefined) {
   module.exports = React.createClass({
 
+    // Lifecycle
+
     render: function() {
-      var classString = "photo thumbnail faded-out";
       return (
-        <div className={classString} ref='photo' data-id={this.props.photo.id}>
+        <div className="photo thumbnail faded-out" ref='photo' data-id={this.props.photo.id}>
           <PhotoImage farm={this.props.photo.farm} server={this.props.photo.server} photo_id={this.props.photo.id} photo_secret={this.props.photo.secret} owner={this.props.photo.owner} size='n' />
           <div className="caption">
             <PhotoTitle photo_id={this.props.photo.id} title={this.props.photo.title} owner={this.props.photo.owner} />
@@ -33,4 +34,4 @@ var React            = require('react'),
     }
 
   });
-}(React, _, module));
+}(React, ReactDOM, _, PhotoAuthor, PhotoDescription, PhotoImage, PhotoTags, PhotoTitle, module));

@@ -1,6 +1,6 @@
 var _ = require('lodash');
 
-(function(_, module) {
+(function(_, module, undefined) {
 
   var Photo = function(data, flickr) {
 
