@@ -1,24 +1,26 @@
+var dispatcher       = require('../dispatcher'),
+    EventEmitter     = require('event-emitter'),
+    _                = require('lodash'),
+    Photo            = require('../models/Photo.js'),
+    SearchQueryStore = require('../stores/SearchQueryStore.js');
+
 require("flickrapi/browser/flickrapi.js");
 
-var _     = require('lodash'),
-    Photo = require('../models/Photo.js');
+(function(Flickr, EventEmitter, SearchQueryStore, Photo, _, module, undefined) {
 
-(function(Flickr, _, Photo, module, undefined) {
+  var PhotosStore = EventEmitter({
 
-  var Feed = function() {
-
-    this.photos = [];
-    this.subscriptions = {};
-    this.loading = true;
-    this.loadingFirst = true;
-    this.searchId = 0;
-
-    this.flickr = new Flickr({
+    photos: [],
+    subscriptions: {},
+    loading: true,
+    loadingFirst: true,
+    searchId: 0,
+    flickr: new Flickr({
       api_key: "6fd39196ea7e93c54cd69b4b607b06d5",
       progress: false
-    });
+    }),
 
-    this.update = function(searchQuery, page) {
+    update: function(searchQuery, page) {
       if (page === undefined) page = 1;
       this.page = page;
       this.loading = true;
@@ -35,15 +37,15 @@ var _     = require('lodash'),
       } else {
         this.getRecent();
       }
-    };
+    },
 
-    this.loadMore = function() {
+    loadMore: function() {
       if (!this.loading && this.photos.length > 0) {
         this.update(true, this.page+1);
       }
-    };
+    },
 
-    this.search = function(searchQuery) {
+    search: function(searchQuery) {
       var self = this;
       // We use a searchId that increments with each search.
       // This insures that if we change the search query
@@ -54,16 +56,16 @@ var _     = require('lodash'),
           self.photosUpdated(err, result);
         }
       });
-    };
+    },
 
-    this.getDefaultOptions = function() {
+    getDefaultOptions: function() {
       return {
         page: this.page || 1,
         per_page: 18,
         extras: 'tags,description,owner_name' };
-    };
+    },
 
-    this.optionizeSearchQuery = function(searchQuery) {
+    optionizeSearchQuery: function(searchQuery) {
       r = this.getDefaultOptions();
       tags = searchQuery.match(/tag:([^ ]+)/g);
       if (tags) {
@@ -79,9 +81,9 @@ var _     = require('lodash'),
       r.text = searchQuery.replace(/  +/g, " ");
 
       return r;
-    };
+    },
 
-    this.getRecent = function() {
+    getRecent: function() {
       var self = this;
       var searchId = this.searchId;
       this.flickr.photos.getRecent(this.getDefaultOptions(), function(err, result) {
@@ -89,52 +91,45 @@ var _     = require('lodash'),
           self.photosUpdated(err, result);
         }
       });
-    };
+    },
 
-    this.clear = function() {
+    updated: function() {
+      this.emit('updated', this.photos);
+    },
+
+    clear: function() {
       this.photos = [];
-      this.trigger('update');
-    };
+      this.updated();
+    },
 
-    this.photosUpdated = _.bind(function(err, result) {
+    photosUpdated: function(err, result) {
       if(err) { throw new Error(err); }
-      var photos = this.initiatePhotos(result.photos.photo);
+      var photos = PhotosStore.initiatePhotos(result.photos.photo);
       if (result.photos.page == 1) {
-        this.photos = photos;
+        PhotosStore.photos = photos;
       } else {
-        this.photos = this.photos.concat(photos);
+        PhotosStore.photos = PhotosStore.photos.concat(photos);
       }
-      this.loading = false;
-      this.loadingFirst = false;
-      this.trigger('update', this.photos);
-    }, this);
+      PhotosStore.loading = false;
+      PhotosStore.loadingFirst = false;
+      PhotosStore.updated();
+    },
 
+    onQueryChange: function(query, previousQuery) {
+      PhotosStore.update(query);
+    },
 
-    this.initiatePhotos = function(photos) {
+    initiatePhotos: function(photos) {
       var self = this;
       return photos.map(function(photo) {
-        var photoModel = new Photo(photo, self.flickr);
+        var photoModel = new Photo(photo);
         return photoModel;
       });
-    };
+    }
 
-    this.subscribe = function(event, func) {
-      if (!this.subscriptions[event]) this.subscriptions[event] = [];
-      if (this.subscriptions[event].indexOf(func) == -1) {
-        this.subscriptions[event].push(func);
-      }
-    };
+  });
 
-    this.trigger = function() {
-      args  = Array.prototype.slice.call(arguments);
-      event = args.shift();
-      if (this.subscriptions[event]) {
-        this.subscriptions[event].forEach(function(subscriber) {
-          subscriber.apply(this, args);
-        }, this);
-      }
-    };
+  SearchQueryStore.on('changed', PhotosStore.onQueryChange);
+  module.exports = PhotosStore;
 
-  };
-  module.exports = Feed;
-}(window.Flickr, _, Photo, module, undefined));
+})(window.Flickr, EventEmitter, SearchQueryStore, Photo, _, module);

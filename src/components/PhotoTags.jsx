@@ -13,7 +13,7 @@ var React = require('react'),
         <div className='tags'>
           {(this.props.tags || []).map(function(tag) {
             return [
-              <PhotoTag key={tag} tag={tag} searchQuery={self.props.searchQuery} setSearchQuery={self.props.setSearchQuery} />,
+              <PhotoTag key={tag} tag={tag} searchQuery={self.props.searchQuery} />,
               " "
             ];
           })}

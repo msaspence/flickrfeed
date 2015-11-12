@@ -64,7 +64,7 @@ window.photos = [];
             {this.props.photos.map(function (photo, j) {
               return (
                 <div className="col-sm-3 col-md-2" key={j}>
-                  <Photo photo={photo} key={photo.id} searchQuery={self.props.searchQuery} setSearchQuery={self.props.setSearchQuery} />
+                  <Photo photo={photo} key={photo.id} searchQuery={self.props.searchQuery} />
                 </div>
               );
             })}

@@ -1,8 +1,12 @@
-var React = require('react'),
-    Link  = require('react-router/lib/Link');
+var React              = require('react'),
+    SearchQueryActions = require('../actions/SearchQueryActions.js'),
+    History            = require('react-router/lib/History'),
+    Link               = require('react-router/lib/Link');
 
-(function(React, Link, module, undefined) {
+(function(React, Link, History, module, undefined) {
   module.exports = React.createClass({
+
+    mixins: [ History ],
 
     // Configuration
 
@@ -43,7 +47,7 @@ var React = require('react'),
     // Events
 
     onButtonClick: function() {
-      this.props.setSearchQuery(this.state.inputValue);
+      this.history.pushState(null, this.state.inputValue === "" ? '/' : '/search/'+encodeURIComponent(this.state.inputValue));
     },
 
     onInputChange: function(event) {
@@ -57,10 +61,11 @@ var React = require('react'),
     },
 
     onClear: function(event) {
+      event.preventDefault();
       this.setState({ inputValue: "" }, function() {
         this.onButtonClick();
       });
     }
 
   });
-}(React, Link, module));
+}(React, Link, History, module));

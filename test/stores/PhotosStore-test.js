@@ -1,68 +1,71 @@
 require('../helper.js')
 
-var Feed  = require('../../src/services/Feed.js'),
+var PhotosStore  = require('../../src/stores/PhotosStore.js'),
     Photo = require('../../src/models/Photo.js'),
-    feed,
     server;
 
-describe('Feed', function() {
+describe('PhotosStore', function() {
 
   beforeEach(function() {
-    feed = new Feed();
+    PhotosStore.page = 1;
+    PhotosStore.photos = [];
+    PhotosStore.loading = true;
+    PhotosStore.loadingFirst = true;
+    PhotosStore.searchId = 0;
   });
 
   describe('#update', function () {
 
     it("set loading to true", function() {
-      feed.loadingFirst=false;
-      feed.update();
-      expect(feed.loading).to.be.true;
-      expect(feed.loadingFirst).to.be.false;
-      expect(feed.page).to.equal(1);
+      PhotosStore.loadingFirst=false;
+      PhotosStore.update();
+      expect(PhotosStore.loading).to.be.true;
+      expect(PhotosStore.loadingFirst).to.be.false;
+      expect(PhotosStore.page).to.equal(1);
     });
 
     context("when search query is null", function() {
       it("gets recent", sinon.test(function() {
-        var mock = this.mock(feed)
+        var mock = this.mock(PhotosStore)
           .expects('getRecent')
           .once();
-        feed.update(null);
+        PhotosStore.update(null);
         mock.verify();
       }));
     });
 
     context("when search query is empty", function() {
       it("gets recent", sinon.test(function() {
-        var mock = this.mock(feed)
+        var mock = this.mock(PhotosStore)
           .expects('getRecent')
           .once();
-        feed.update("");
+        PhotosStore.update("");
         mock.verify();
       }));
     });
 
     context("when search query is provided", function() {
       it("calls search", sinon.test(function() {
-        var mock = this.mock(feed)
+        var mock = this.mock(PhotosStore)
           .expects('search')
           .once();
-        feed.update("my search query");
+        PhotosStore.update("my search query");
         mock.verify();
       }));
     });
 
     context("when search query is true", function() {
       it("calls search", sinon.test(function() {
-        feed.searchQuery = "old search query";
-        feed.update(true);
-        expect(feed.searchQuery).to.equal("old search query");
+        PhotosStore.searchQuery = "old search query";
+        PhotosStore.update(true);
+        expect(PhotosStore.searchQuery).to.equal("old search query");
       }));
     });
 
     context("when page is provide", function() {
       it("sets page", function() {
-        feed.update("my search query",2);
-        expect(feed.page).to.equal(2);
+        PhotosStore.update("my search query",2);
+        expect(PhotosStore.page).to.equal(2);
       });
     });
 
@@ -70,16 +73,16 @@ describe('Feed', function() {
 
   describe('#search', function() {
     it("calls the Flickr API search", sinon.test(function() {
-      var mockFlickr = this.mock(feed.flickr.photos)
+      var mockFlickr = this.mock(PhotosStore.flickr.photos)
         .expects('search')
         .withArgs({ text: 'my search query', extras: 'tags,description,owner_name' })
         .once();
-      var mock = this.mock(feed)
+      var mock = this.mock(PhotosStore)
         .expects('optionizeSearchQuery')
         .withArgs('my search query')
         .once()
         .returns({ text: 'my search query', extras: 'tags,description,owner_name' });
-      feed.search('my search query');
+      PhotosStore.search('my search query');
       mock.verify();
       mockFlickr.verify();
     }));
@@ -87,7 +90,7 @@ describe('Feed', function() {
 
   describe('#optionizeSearchQuery', function() {
     it("moves the string into an object", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my search query")).to.deep.equal({
+      expect(PhotosStore.optionizeSearchQuery("my search query")).to.deep.equal({
         text: "my search query",
         extras: 'tags,description,owner_name',
         page: 1,
@@ -96,7 +99,7 @@ describe('Feed', function() {
     }));
 
     it("extracts tags", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({
+      expect(PhotosStore.optionizeSearchQuery("my tag:mytag:_withsymbols search tag:hello query")).to.deep.equal({
         text: "my search query",
         tags: "mytag:_withsymbols,hello",
         tag_mode: 'all',
@@ -107,7 +110,7 @@ describe('Feed', function() {
     }));
 
     it("extracts owner", sinon.test(function() {
-      expect(feed.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({
+      expect(PhotosStore.optionizeSearchQuery("my owner:ownerid search owner:notownerid query")).to.deep.equal({
         text: "my search query",
         user_id: "ownerid",
         extras: 'tags,description,owner_name',
@@ -120,11 +123,11 @@ describe('Feed', function() {
   describe('#getRecent', function() {
     it("calls the Flickr API getRecent", sinon.test(function() {
       callback = sinon.spy();
-      var mockFlickr = this.mock(feed.flickr.photos)
+      var mockFlickr = this.mock(PhotosStore.flickr.photos)
         .expects('getRecent')
         .withArgs({ extras: 'tags,description,owner_name', page: 1, per_page: 18 })
         .once();
-      feed.getRecent();
+      PhotosStore.getRecent();
       mockFlickr.verify();
     }));
   });
@@ -135,27 +138,27 @@ describe('Feed', function() {
 
     it ("initiates photos", sinon.test(function() {
       initiatedPhotos = [{ a: 'c' }]
-      var mock = this.mock(feed)
+      var mock = this.mock(PhotosStore)
         .expects('initiatePhotos')
         .withArgs([{a: 'b'}])
         .once()
         .returns([{ a: 'c' }]);
-      feed.photosUpdated(null, photos);
+      PhotosStore.photosUpdated(null, photos);
       mock.verify();
-      expect(feed.photos).to.deep.equal(initiatedPhotos);
+      expect(PhotosStore.photos).to.deep.equal(initiatedPhotos);
     }));
 
     it("loading is set to false", function() {
-      feed.loadingFirst=true;
-      feed.photosUpdated(null, photos);
-      expect(feed.loading).to.be.false;
-      expect(feed.loadingFirst).to.be.false;
+      PhotosStore.loadingFirst=true;
+      PhotosStore.photosUpdated(null, photos);
+      expect(PhotosStore.loading).to.be.false;
+      expect(PhotosStore.loadingFirst).to.be.false;
     });
 
     it("triggers update", function() {
       spy = sinon.spy();
-      feed.subscribe('update', spy);
-      feed.photosUpdated(null, photos);
+      PhotosStore.on('updated', spy);
+      PhotosStore.photosUpdated(null, photos);
       expect(spy).to.have.been.called;
     });
 
@@ -165,40 +168,17 @@ describe('Feed', function() {
 
       it("concats the results on to the existing", sinon.test(function() {
         initiatedPhotos = [{ a: 'c' }]
-        feed.photos = [{ b: 'd' }]
-        var mock = this.mock(feed)
+        PhotosStore.photos = [{ b: 'd' }]
+        var mock = this.mock(PhotosStore)
           .expects('initiatePhotos')
           .withArgs([{a: 'b'}])
           .once()
           .returns({ a: 'c' });
-        feed.photosUpdated(null, photos);
+        PhotosStore.photosUpdated(null, photos);
         mock.verify();
-        expect(feed.photos).to.deep.equal([{b: 'd'}, {a: 'c'}]);
+        expect(PhotosStore.photos).to.deep.equal([{b: 'd'}, {a: 'c'}]);
       }));
 
-    });
-
-  });
-
-  describe('#subscribe', function () {
-
-    it('adds a callback for the event once', function () {
-      var my_callback = function() {};
-      feed.subscribe('update', my_callback);
-      expect(feed.subscriptions).to.deep.equal({update: [my_callback]});
-      feed.subscribe('update', my_callback);
-      expect(feed.subscriptions).to.deep.equal({update: [my_callback]});
-    });
-
-  });
-
-  describe('#trigger', function () {
-
-    it('calls each of the subscribed callbacks', function () {
-      var my_callback = sinon.spy();
-      feed.subscribe('update', my_callback);
-      feed.trigger('update');
-      expect(my_callback).to.have.been.called;
     });
 
   });
@@ -206,8 +186,8 @@ describe('Feed', function() {
   describe('#getDefaultOptions', function() {
 
     it("provides the default options", function() {
-      feed.page = null;
-      expect(feed.getDefaultOptions()).to.deep.equal({
+      PhotosStore.page = null;
+      expect(PhotosStore.getDefaultOptions()).to.deep.equal({
         extras: 'tags,description,owner_name',
         page: 1,
         per_page: 18
@@ -216,8 +196,8 @@ describe('Feed', function() {
 
     context("when page is set", function() {
       it("provides the set value", function() {
-        feed.page = 3;
-        expect(feed.getDefaultOptions().page).to.equal(3);
+        PhotosStore.page = 3;
+        expect(PhotosStore.getDefaultOptions().page).to.equal(3);
       });
     });
 
@@ -226,7 +206,7 @@ describe('Feed', function() {
   describe('#initiatePhotos', function () {
 
     it('replaces each photo with a Photo and calls update on them', function () {
-      result = feed.initiatePhotos([{id:0},{id:1},{id:2}])
+      result = PhotosStore.initiatePhotos([{id:0},{id:1},{id:2}])
       expect(result.length).to.equal(3);
       [0,1,2].forEach(function(i) {
         expect(result[i]).to.be.an.instanceof(Photo);
@@ -239,30 +219,30 @@ describe('Feed', function() {
   describe('#loadMore', function() {
 
     it("calls update with the search query and the next page", sinon.test(function() {
-      feed.update = this.spy();
-      feed.loading = false;
-      feed.page = 2;
-      feed.photos = [{}];
-      feed.loadMore();
-      expect(feed.update).to.have.been.calledWith(true, 3);
+      PhotosStore.update = this.spy();
+      PhotosStore.loading = false;
+      PhotosStore.page = 2;
+      PhotosStore.photos = [{}];
+      PhotosStore.loadMore();
+      expect(PhotosStore.update).to.have.been.calledWith(true, 3);
     }));
 
-    context("when feed is already loading", function() {
+    context("when photos store is already loading", function() {
       it("calls update with the search query and the next page", sinon.test(function() {
-        feed.update = this.spy();
-        feed.loading = true;
-        feed.loadMore();
-        expect(feed.update).to.have.not.been.called;
+        PhotosStore.update = this.spy();
+        PhotosStore.loading = true;
+        PhotosStore.loadMore();
+        expect(PhotosStore.update).to.have.not.been.called;
       }));
     });
 
-    context("when feed has no results to load", function() {
+    context("when photos store has no results to load", function() {
       it("calls update with the search query and the next page", sinon.test(function() {
-        feed.update = this.spy();
-        feed.loading = true;
-        feed.photos = [];
-        feed.loadMore();
-        expect(feed.update).to.have.not.been.called;
+        PhotosStore.update = this.spy();
+        PhotosStore.loading = true;
+        PhotosStore.photos = [];
+        PhotosStore.loadMore();
+        expect(PhotosStore.update).to.have.not.been.called;
       }));
     });
 

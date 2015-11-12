@@ -17,9 +17,7 @@ describe('PhotoTags', function() {
     it('renders the tags', function () {
       render();
       tags = renderedDOM.querySelectorAll('.tag');
-      expect(tags[0].getAttribute('href')).to.equal('https://www.flickr.com/search/?tags=mytag');
       expect(tags[0].textContent).to.equal('mytag');
-      expect(tags[1].getAttribute('href')).to.equal('https://www.flickr.com/search/?tags=mytag2');
       expect(tags[1].textContent).to.equal('mytag2');
     });
 

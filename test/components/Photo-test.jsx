@@ -45,9 +45,8 @@ describe('Photo', function() {
 
     it('renders the author', function () {
       render();
-      authorLink = renderedDOM.querySelector(".author a")
+      authorLink = renderedDOM.querySelector(".author a");
       expect(authorLink.textContent).to.equal('Owner String');
-      expect(authorLink.getAttribute('href')).to.equal('https://www.flickr.com/people/owner_id');
     });
 
     it('renders the description', function () {

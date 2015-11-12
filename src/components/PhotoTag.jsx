@@ -1,29 +1,32 @@
-var React = require('react');
+var React              = require('react'),
+    Link               = require('react-router/lib/Link');
 
-(function(React, module, undefined) {
+(function(React, Link, module, undefined) {
   module.exports = React.createClass({
 
     // Lifecycle
 
     render: function() {
-      var href = 'https://www.flickr.com/search/?tags='+this.props.tag;
-      var labelColor;
-      if (this.props.searchQuery && this.props.searchQuery.match(new RegExp("( |^)tag:"+this.props.tag+"( |$)"))) {
-        labelColor = 'label-primary';
-      } else {
-        labelColor = 'label-default';
-      }
       return (
-        <a href={href} ref='tag' onClick={this.onClick} target='_blank' className={'tag label '+labelColor}>{this.props.tag}</a>
+        <Link to={this.to()} ref='tag' className={this.className()}>{this.props.tag}</Link>
       );
     },
 
-    // Events
+    // Derivers
 
-    onClick: function(event) {
-      event.preventDefault();
-      this.props.setSearchQuery('tag:'+this.props.tag);
+    className: function() {
+      r = "tag label";
+      if (this.props.searchQuery && this.props.searchQuery.match(new RegExp("( |^)tag:" + this.props.tag+"( |$)"))) {
+        r += ' label-primary';
+      } else {
+        r += ' label-default';
+      }
+      return r;
+    },
+
+    to: function() {
+      return '/search/tag:'+this.props.tag;
     }
 
   });
-}(React, module));
+}(React, Link, module));

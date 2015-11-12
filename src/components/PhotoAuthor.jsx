@@ -1,6 +1,7 @@
-var React = require('react');
+var React = require('react'),
+    Link  = require('react-router/lib/Link');
 
-(function(React, module, undefined) {
+(function(React, Link, module, undefined) {
   module.exports = React.createClass({
 
     // Lifecycle
@@ -8,23 +9,16 @@ var React = require('react');
     render: function() {
       return (
         <h5 className='author'>
-          by <a href={this.href()} target="_blank" ref="author" onClick={this.onClick}>{this.props.owner_name}</a>
+          by <Link to={this.to()} ref="author">{this.props.owner_name}</Link>
         </h5>
       );
     },
 
     // Derivers
 
-    href: function() {
-      return 'https://www.flickr.com/people/'+this.props.owner;
-    },
-
-    // Events
-
-    onClick: function(event) {
-      event.preventDefault();
-      this.props.setSearchQuery('owner:'+this.props.owner);
+    to: function() {
+      return '/search/owner:'+this.props.owner;
     }
 
   });
-}(React, module));
+}(React, Link, module));

@@ -1,21 +1,11 @@
 require('../helper.js')
-var Feed = require('../../src/services/Feed.js'),
-    Photos = require('../../src/components/Photos.jsx');
+var PhotosStore = require('../../src/stores/PhotosStore.js'),
+    Photos      = require('../../src/components/Photos.jsx');
 
 describe('Photos', function() {
 
   var photos,
-      feed,
       renderedDOM;
-
-  beforeEach(function() {
-    feed = new Feed();
-    // feed.flickr.photos.getRecent = sinon.stub();
-  });
-
-  afterEach(function() {
-    // feed.flickr.photos.getRecent.restore();
-  });
 
   describe('#render()', function () {
 
@@ -45,9 +35,9 @@ describe('Photos', function() {
     });
 
 
-    context("when the feed returns photos", function() {
+    context("when the photos store returns photos", function() {
       it('renders each photo', function () {
-        photos = feed.initiatePhotos([{id:'1', title:'Title 1'},{id:'2', title:'Title 2'},{id:'3', title:'Title 3'}]);
+        photos = PhotosStore.initiatePhotos([{id:'1', title:'Title 1'},{id:'2', title:'Title 2'},{id:'3', title:'Title 3'}]);
         render(photos);
         ['1','2','3'].forEach(function(i) {
           expect(renderedDOM.querySelector(".photos .photo[data-id=\""+i+"\"]").textContent).to.contain("Title "+i);
@@ -55,7 +45,7 @@ describe('Photos', function() {
       });
     });
 
-    context("when the feed returns no photos", function() {
+    context("when the photos store returns no photos", function() {
       it('renders empty message', function () {
         photos = [];
         render(photos, false);
@@ -64,9 +54,9 @@ describe('Photos', function() {
       });
     });
 
-    context("when the feed updates it rerenders", function() {
+    context("when the photos store updates it rerenders", function() {
       it('renders empty message', function () {
-        photos = feed.initiatePhotos([{id:'4', title:'Title 4'},{id:'5', title:'Title 5'},{id:'6', title:'Title 6'}]);
+        photos = PhotosStore.initiatePhotos([{id:'4', title:'Title 4'},{id:'5', title:'Title 5'},{id:'6', title:'Title 6'}]);
         render(photos);
         ['4','5','6'].forEach(function(i) {
           expect(renderedDOM.querySelector(".photo[data-id=\""+i+"\"]").textContent).to.contain("Title "+i);

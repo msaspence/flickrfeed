@@ -1,95 +1,68 @@
-var React    = require('react'),
-    ReactDOM = require('react-dom'),
-    _        = require('lodash'),
-    Header   = require('./Header.jsx'),
-    Photos   = require('./Photos.jsx'),
-    Feed     = require('../services/Feed.js'),
-    OnScroll = require("react-window-mixins").OnScroll,
-    History  = require('react-router/lib/History');
+var React            = require('react'),
+    ReactDOM         = require('react-dom'),
+    _                = require('lodash'),
+    Header           = require('./Header.jsx'),
+    Photos           = require('./Photos.jsx'),
+    SearchQueryStore = require('../stores/SearchQueryStore.js'),
+    PhotosStore      = require('../stores/PhotosStore.js'),
+    OnScroll         = require("react-window-mixins").OnScroll;
 
 
-(function(React, ReactDOM, _, Header, Photos, Feed, OnScroll, History, module, undefined) {
+(function(React, ReactDOM, _, Header, Photos, PhotosStore, OnScroll, module, undefined) {
 
   module.exports = React.createClass({
 
-    mixins: [ History, OnScroll ],
-
-    // Application State
-
-    getInitialState: function() {
-      return {
-        previousSearchQuery: null,
-        searchQuery: null
-      };
-    },
-
-    getDefaultProps: function() {
-      return {
-        feed: new Feed()
-      };
-    },
+    mixins: [ OnScroll ],
 
     // Lifecycle
 
     componentWillReceiveProps: function (nextProps) {
-      this.setState({
-        previousSearchQuery: this.props.params.searchQuery
-      });
-      if (nextProps.params.searchQuery != this.props.params.searchQuery) {
-        this.props.feed.update(nextProps.params.searchQuery);
-      }
-    },
-
-    componentWillMount: function() {
-      if (this.props.feed) {
-        this.props.feed.subscribe('update', _.bind(this.photosUpdated, this));
-        this.props.feed.update(this.props.params.searchQuery);
-      }
+      SearchQueryStore.set(nextProps.params.searchQuery);
     },
 
     render: function() {
-      if (this.state.previousSearchQuery != this.props.params.searchQuery) {
-        searchQuery = this.props.params.searchQuery;
-      } else {
-        searchQuery = undefined;
-      }
       return (
         <div className="container">
           <Header text="Flickr Photo Stream"
-                  searchQuery={searchQuery}
-                  setSearchQuery={this.setSearchQuery} />
-          <Photos searchQuery={this.props.params.searchQuery}
-                  setSearchQuery={this.setSearchQuery}
-                  photos={this.props.feed.photos}
-                  loading={this.props.feed.loadingFirst}
+                  searchQuery={SearchQueryStore.get()} />
+          <Photos searchQuery={SearchQueryStore.get()}
+                  photos={PhotosStore.photos}
+                  loading={PhotosStore.loadingFirst}
                   ref='photos' />
         </div>
       );
     },
 
+    componentDidMount: function() {
+      PhotosStore.on('updated', this.storeUpdated);
+      SearchQueryStore.on('changed', this.storeUpdated);
+      SearchQueryStore.set(this.props.params.searchQuery);
+    },
+
+    componentWillUnmount: function() {
+      SearchQueryStore.off('changed', this.storeUpdated);
+      PhotosStore.off('updated', this.storeUpdated);
+    },
+
     // Callbacks
 
-    photosUpdated: function() {
+    storeUpdated: function() {
       this.forceUpdate();
       this.onScroll();
     },
 
     // Events
 
-    setSearchQuery: function(searchQuery) {
-      this.history.pushState(null, searchQuery === "" ? '/' : '/search/'+encodeURIComponent(searchQuery));
-    },
-
     onScroll: function(event) {
       if (this.refs.photos) {
         bottom = this.refs.photos.bottom();
         if (bottom-5000 < window.innerHeight) {
           var self = this;
-          self.props.feed.loadMore();
+          PhotosStore.loadMore();
         }
       }
     }
 
   });
 
-}(React, ReactDOM, _, Header, Photos, Feed, OnScroll, History, module));
+}(React, ReactDOM, _, Header, Photos, PhotosStore, OnScroll, module));

@@ -1,4 +1,4 @@
-var React = require('react'),
+var React        = require('react'),
     sanitizeHtml = require('sanitize-html');
 
 (function(React, sanitizeHtml, module, undefined) {
